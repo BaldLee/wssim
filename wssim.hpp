@@ -1,6 +1,7 @@
 #ifndef _WSSIM_HPP_
 #define _WSSIM_HPP_ 1
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <random>
 
@@ -37,7 +38,9 @@ class wssim {
 
   static void shuffle(std::vector<card>& deck);
 
-  static void pattackp(player& atk, player& def, int soul);
+  static bool pattackp(player& atk, player& def, int soul);
+
+  static void push_cards_into_deck(std::vector<card>& deck, card card, int num);
 };
 
 class player {
@@ -63,9 +66,28 @@ class player {
         memory(_memory),
         stage(_stage),
         hands(_hands) {}
+  player(int _hp, int _deck, int _climax_in_deck, int _waiting_room,
+         int _climax_in_waiting_room) {
+    int _level = _hp / 7;
+    int _clock = _hp % 7;
+    if (_hp >= 28) {
+      std::cout << "Warning: player's level is not less than 4. Player is "
+                << _level << "-" << _clock << " now." << std::endl;
+    }
+    if (_deck > 50) {
+      std::cout << "Warning: deck is larger than 50, it's " << _deck << " now."
+                << std::endl;
+    }
+    if (_climax_in_deck > 8) {
+    }
+  }
+  void sethp(int hp);
+  int gethp();
+  void print();
   void refresh_check();
   void levelup_check();
-  void take_damage(int damage);
+  bool take_damage(int damage);
+  void be_mokaed(int count);
   void back_and_shuffle(int count);
   int linglong7();
 };
@@ -100,15 +122,57 @@ void wssim::shuffle(std::vector<card>& deck) {
   }
 }
 
-void wssim::pattackp(player& atk, player& def, int soul) {
+bool wssim::pattackp(player& atk, player& def, int soul) {
   int damage = soul + atk.deck.back().trigger;
   atk.stock.push_back(atk.deck.back());
   atk.deck.pop_back();
   atk.refresh_check();
-  def.take_damage(damage);
+  return def.take_damage(damage);
+}
+
+void wssim::push_cards_into_deck(std::vector<card>& deck, card card, int num) {
+  for (int i = 0; i < num; i++) {
+    deck.push_back(card);
+  }
 }
 
 /* class player */
+void player::sethp(int hp) {
+  int _level = hp / 7;
+  int _clock = hp % 7;
+  level.clear();
+  clock.clear();
+  for (int i = 0; i < _level; i++) {
+    level.push_back(card(0, card::CHAR, 0));
+  }
+  for (int i = 0; i < _clock; i++) {
+    clock.push_back(card(0, card::CHAR, 0));
+  }
+}
+
+int player::gethp() { return level.size() * 7 + clock.size(); }
+
+void player::print() {
+  std::cout << "deck: " << deck.size() << std::endl;
+  for_each(deck.begin(), deck.end(), [](auto x) { x.print(); });
+  std::cout << std::endl
+            << "waiting_room: " << waiting_room.size() << std::endl;
+  for_each(waiting_room.begin(), waiting_room.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "level: " << level.size() << std::endl;
+  for_each(level.begin(), level.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "stock: " << stock.size() << std::endl;
+  for_each(stock.begin(), stock.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "clock: " << clock.size() << std::endl;
+  for_each(clock.begin(), clock.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "memory: " << memory.size() << std::endl;
+  for_each(memory.begin(), memory.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "stage: " << stage.size() << std::endl;
+  for_each(stage.begin(), stage.end(), [](auto x) { x.print(); });
+  std::cout << std::endl << "hands: " << hands.size() << std::endl;
+  for_each(hands.begin(), hands.end(), [](auto x) { x.print(); });
+  std::cout << std::endl;
+}
+
 void player::refresh_check() {
   if (deck.empty()) {
     deck.insert(deck.end(), waiting_room.begin(), waiting_room.end());
@@ -151,7 +215,7 @@ void player::levelup_check() {
   }
 }
 
-void player::take_damage(int damage) {
+bool player::take_damage(int damage) {
   bool canceled = false;
   std::vector<card> temp;
   for (int i = 0; i < damage; i++) {
@@ -168,6 +232,26 @@ void player::take_damage(int damage) {
   } else {
     clock.insert(clock.end(), temp.begin(), temp.end());
     levelup_check();
+  }
+  return canceled;
+}
+
+void player::be_mokaed(int count) {
+  int n = count;
+  if (deck.size() < count) {
+    n = deck.size();
+  }
+  std::vector<card> tmp;
+  for (int i = 0; i < n; i++) {
+    if (deck.back().type != card::CLIMAX) {
+      tmp.push_back(deck.back());
+    }
+    deck.pop_back();
+  }
+  int nn = tmp.size();
+  for (int i = 0; i < nn; i++) {
+    deck.push_back(tmp.back());
+    tmp.pop_back();
   }
 }
 
@@ -200,5 +284,9 @@ int player::linglong7() {
     refresh_check();
   }
   return triggers;
+}
+
+void output_json(std::string path, const std::map<int, int> res) {
+  std::ofstream fout(path, std::ios::out);
 }
 #endif /*_WSSIM_HPP_*/

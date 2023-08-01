@@ -51,7 +51,7 @@ int test_sim_linglong(const player& atk, const player& def) {
   return killed_count;
 }
 
-int main() {
+void test_linglong() {
   player linglong, tom;
   // tom is 2-2, deck 7/27, wr 1/2 [climax]
   tom.level.push_back(card(0, card::CHAR, 0));
@@ -87,5 +87,280 @@ int main() {
 
   auto res = test_sim_linglong(linglong, tom);
   std::cout << res << "/" << REPEAT << ":" << double(res) / REPEAT << std::endl;
+}
+
+int test_sim_twilight(const player& atk, const player& def) {
+  int killed_count = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    // std::cout << "hello" << std::endl;
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    // burn 1 burn 1 moka 1
+    d.take_damage(1);
+    d.take_damage(1);
+    d.be_mokaed(1);
+    // twilight: burn 3 if cancel burn 1
+    if (d.take_damage(3)) {
+      d.take_damage(1);
+    }
+    wssim::pattackp(a, d, 3);
+    // dog attack
+    wssim::pattackp(a, d, 3);
+    // twilight: burn 3 if cancel burn 1
+    if (d.take_damage(3)) {
+      d.take_damage(1);
+    }
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed_count++;
+    }
+  }
+
+  return killed_count;
+}
+
+void test_twilight() {
+  player atk;
+  // attack deck trigger: 8/20
+  for (int i = 0; i < 8; i++) {
+    atk.deck.push_back(card(0, card::CHAR, 1));
+  }
+  for (int i = 0; i < 12; i++) {
+    atk.deck.push_back(card(0, card::CHAR, 0));
+  }
+  player def30_8;
+  for (int i = 0; i < 8; i++) {
+    def30_8.deck.push_back(card(0, card::CLIMAX, 0));
+  }
+  for (int i = 0; i < 22; i++) {
+    def30_8.deck.push_back(card(0, card::CHAR, 0));
+  }
+  player def30_6;
+  for (int i = 0; i < 6; i++) {
+    def30_6.deck.push_back(card(0, card::CLIMAX, 0));
+  }
+  for (int i = 0; i < 24; i++) {
+    def30_6.deck.push_back(card(0, card::CHAR, 0));
+  }
+  player def25_8;
+  for (int i = 0; i < 8; i++) {
+    def25_8.deck.push_back(card(0, card::CLIMAX, 0));
+  }
+  for (int i = 0; i < 17; i++) {
+    def25_8.deck.push_back(card(0, card::CHAR, 0));
+  }
+  player def25_6;
+  for (int i = 0; i < 6; i++) {
+    def25_6.deck.push_back(card(0, card::CLIMAX, 0));
+  }
+  std::map<std::string, player> def_map;
+  def_map["30/8"] = def30_8;
+  def_map["30/6"] = def30_6;
+  def_map["25/8"] = def25_8;
+  def_map["25/6"] = def25_6;
+  for (int i = 0; i < 19; i++) {
+    def25_6.deck.push_back(card(0, card::CHAR, 0));
+  }
+  for (int i = 9; i < 28; i++) {
+    int hp = i;
+    int level = hp / 7;
+    int clock = hp % 7;
+    std::map<std::string, player> d_map;
+    auto d1 = def30_8;
+    auto d2 = def30_6;
+    auto d3 = def25_8;
+    auto d4 = def25_6;
+    d1.sethp(i);
+    d2.sethp(i);
+    d3.sethp(i);
+    d4.sethp(i);
+    d_map["30/8"] = d1;
+    d_map["30/6"] = d2;
+    d_map["25/8"] = d3;
+    d_map["25/6"] = d4;
+    // std::for_each(d_map.begin(), d_map.end(), [](auto x) {
+    //   std::cout << x.first << std::endl;
+    //   x.second.print();
+    // });
+    for (auto x : d_map) {
+      int res = test_sim_twilight(atk, x.second);
+      std::cout << level << "-" << clock << " " << x.first << " : "
+                << double(res) / REPEAT << std::endl;
+    }
+  }
+}
+
+int test_sim_pixar_linglong1(const player& atk, const player& def) {
+  // 434 43 43
+  int killed_count = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    int soul = 3;
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 43
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 43
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+
+    if (d.level.size() >= 4) {
+      killed_count++;
+    }
+  }
+  return killed_count;
+}
+
+int test_sim_pixar_linglong2(const player& atk, const player& def) {
+  // 434 434 43
+  int killed_count = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    int soul = 3;
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 43
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+
+    if (d.level.size() >= 4) {
+      killed_count++;
+    }
+  }
+  return killed_count;
+}
+
+int test_sim_pixar_linglong3(const player& atk, const player& def) {
+  // 434 434 434
+  int killed_count = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    int soul = 3;
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+    // 434
+    d.take_damage(4);
+    d.back_and_shuffle(3);
+    d.take_damage(4);
+    if (d.gethp() == 25 || d.gethp() == 21) {
+      soul = 2;
+    } else {
+      soul = 3;
+    }
+    wssim::pattackp(a, d, soul);
+
+    if (d.level.size() >= 4) {
+      killed_count++;
+    }
+  }
+  return killed_count;
+}
+
+void test_pixar_linglong() {
+  player atk;
+  // attack deck trigger: 22/25
+  for (int i = 0; i < 22; i++) {
+    atk.deck.push_back(card(0, card::CHAR, 1));
+  }
+  for (int i = 0; i < 3; i++) {
+    atk.deck.push_back(card(0, card::CHAR, 0));
+  }
+  player def;
+  for (int i = 0; i < 18; i++) {
+    def.deck.push_back(card(0, card::CHAR, 0));
+  }
+  for (int i = 0; i < 7; i++) {
+    def.deck.push_back(card(0, card::CLIMAX, 0));
+  }
+  for (int i = 0; i < 3; i++) {
+    def.waiting_room.push_back(card(0, card::CHAR, 0));
+  }
+  def.waiting_room.push_back(card(0, card::CLIMAX, 0));
+  def.sethp(16);
+
+  std::cout << double(test_sim_pixar_linglong1(atk, def)) / REPEAT << std::endl;
+  std::cout << double(test_sim_pixar_linglong2(atk, def)) / REPEAT << std::endl;
+  std::cout << double(test_sim_pixar_linglong3(atk, def)) / REPEAT << std::endl;
+}
+
+int main() {
+  // test_linglong();
+  // test_twilight();
+  test_pixar_linglong();
   return 0;
 }
