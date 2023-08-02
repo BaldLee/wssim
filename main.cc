@@ -358,9 +358,393 @@ void test_pixar_linglong() {
   std::cout << double(test_sim_pixar_linglong3(atk, def)) / REPEAT << std::endl;
 }
 
+void test_marvel() {
+  player m;
+  wssim::push_cards_into_deck(m.deck, card(0, card::CLIMAX, 0), 8);
+  wssim::push_cards_into_deck(m.deck, card(0, card::CHAR, 0), 30);
+  int success = 0;
+  int count = 0;
+  while (success == 0) {
+    count++;
+    player mm = m;
+    wssim::shuffle(mm.deck);
+    for (int k = 0; k < 8; k++) {
+      if (mm.deck[k].type != card::CLIMAX) {
+        break;
+      }
+      if (k == 7) {
+        success += 1;
+      }
+    }
+  }
+  std::cout << count << std::endl;
+}
+
+int test_sim_jotaro(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    wssim::pattackp(a, d, 3);
+    for (int i = 0; i < 7; i++) {
+      d.take_damage(1);
+    }
+    d.take_damage(7);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_jotaro() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 10);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 0, 0);
+    std::cout << "8/25: " << double(test_sim_jotaro(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 0, 0);
+    std::cout << "6/25: " << double(test_sim_jotaro(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 0, 0);
+    std::cout << "8/30: " << double(test_sim_jotaro(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 0, 0);
+    std::cout << "6/30: " << double(test_sim_jotaro(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_misuzu(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    wssim::pattackp(a, d, 3);
+
+    for (int i = 0; i < 7; i++) {
+      d.take_damage(i + 1);
+    }
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_misuzu() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 10);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 0, 0);
+    std::cout << "8/25: " << double(test_sim_misuzu(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 0, 0);
+    std::cout << "6/25: " << double(test_sim_misuzu(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 0, 0);
+    std::cout << "8/30: " << double(test_sim_misuzu(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 0, 0);
+    std::cout << "6/30: " << double(test_sim_misuzu(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_carcar(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_carcar() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: " << double(test_sim_carcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: " << double(test_sim_carcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: " << double(test_sim_carcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: " << double(test_sim_carcar(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_supercarcar(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    d.take_damage(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_supercarcar() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: " << double(test_sim_supercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: " << double(test_sim_supercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: " << double(test_sim_supercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: " << double(test_sim_supercarcar(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_supersupercarcar(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    d.take_damage(1);
+    d.take_damage(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_supersupercarcar() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: "
+              << double(test_sim_supersupercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: "
+              << double(test_sim_supersupercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: "
+              << double(test_sim_supersupercarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: "
+              << double(test_sim_supersupercarcar(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_carcarcar(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+    d.take_damage(3);
+    d.back_to_top(1);
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_carcarcar() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: " << double(test_sim_carcarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: " << double(test_sim_carcarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: " << double(test_sim_carcarcar(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: " << double(test_sim_carcarcar(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_2woody(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    wssim::pattackp(a, d, 3);
+    d.take_true_damage(d.woody6());
+    wssim::pattackp(a, d, 3);
+    d.take_true_damage(d.woody6());
+    wssim::pattackp(a, d, 3);
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_2woody() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: " << double(test_sim_2woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: " << double(test_sim_2woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: " << double(test_sim_2woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: " << double(test_sim_2woody(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
+int test_sim_3woody(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    player a = atk;
+    player d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    wssim::pattackp(a, d, 3);
+    d.take_true_damage(d.woody6());
+    wssim::pattackp(a, d, 3);
+    d.take_true_damage(d.woody6());
+    wssim::pattackp(a, d, 3);
+    d.take_true_damage(d.woody6());
+
+    if (d.level.size() >= 4) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_3woody() {
+  player atk;
+  player def;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 4, 0);
+    std::cout << "8/25: " << double(test_sim_3woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 25, 6, 4, 0);
+    std::cout << "6/25: " << double(test_sim_3woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 8, 4, 0);
+    std::cout << "8/30: " << double(test_sim_3woody(atk, def)) / REPEAT
+              << std::endl;
+    def.init_defender(hp, 30, 6, 4, 0);
+    std::cout << "6/30: " << double(test_sim_3woody(atk, def)) / REPEAT
+              << std::endl;
+  }
+}
+
 int main() {
   // test_linglong();
   // test_twilight();
-  test_pixar_linglong();
+  // test_pixar_linglong();
+  // test_marvel();
+  // test_jotaro();
+  // test_misuzu();
+  // test_carcar();
+  // test_supercarcar();
+  // test_supersupercarcar();
+  // test_carcarcar();
+  // test_2woody();
+  test_3woody();
+
   return 0;
 }

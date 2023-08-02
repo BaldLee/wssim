@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <random>
 
 /* declare */
@@ -67,38 +68,32 @@ class player {
         stage(_stage),
         hands(_hands) {}
   player(int _hp, int _deck, int _climax_in_deck, int _waiting_room,
-         int _climax_in_waiting_room) {
-    int _level = _hp / 7;
-    int _clock = _hp % 7;
-    if (_hp >= 28) {
-      std::cout << "Warning: player's level is not less than 4. Player is "
-                << _level << "-" << _clock << " now." << std::endl;
-    }
-    if (_deck > 50) {
-      std::cout << "Warning: deck is larger than 50, it's " << _deck << " now."
-                << std::endl;
-    }
-    if (_climax_in_deck > 8) {
-    }
-  }
+         int _climax_in_waiting_room);
   void sethp(int hp);
+  void clearall();
+  void init_attacker(int _deck, int _trigger);
+  void init_defender(int _hp, int _deck, int _climax_in_deck, int _waiting_room,
+                     int _climax_in_waiting_room);
   int gethp();
   void print();
   void refresh_check();
   void levelup_check();
   bool take_damage(int damage);
+  void take_true_damage(int damage);
   void be_mokaed(int count);
   void back_and_shuffle(int count);
+  void back_to_top(int count);
   int linglong7();
+  int woody6();
 };
 
-/* defination */
-/* class card */
+/* Defination */
+/* Class card */
 void card::print() {
   std::cout << "{" << level << "," << type << "," << trigger << "} ";
 }
 
-/* class wssim */
+/* Class wssim */
 std::random_device wssim::rd;
 std::mt19937 wssim::gen(wssim::rd());
 
@@ -136,7 +131,7 @@ void wssim::push_cards_into_deck(std::vector<card>& deck, card card, int num) {
   }
 }
 
-/* class player */
+/* Class player */
 void player::sethp(int hp) {
   int _level = hp / 7;
   int _clock = hp % 7;
@@ -148,6 +143,49 @@ void player::sethp(int hp) {
   for (int i = 0; i < _clock; i++) {
     clock.push_back(card(0, card::CHAR, 0));
   }
+}
+
+void player::clearall() {
+  deck.clear();
+  waiting_room.clear();
+  level.clear();
+  stock.clear();
+  clock.clear();
+  memory.clear();
+  stage.clear();
+  hands.clear();
+}
+
+void player::init_attacker(int _deck, int _triggers) {
+  clearall();
+  wssim::push_cards_into_deck(deck, card(0, card::CHAR, 0), _deck - _triggers);
+  wssim::push_cards_into_deck(deck, card(0, card::CHAR, 1), _triggers);
+}
+
+void player::init_defender(int _hp, int _deck, int _climax_in_deck,
+                           int _waiting_room, int _climax_in_waiting_room) {
+  clearall();
+  int _level = _hp / 7;
+  int _clock = _hp % 7;
+  if (_hp >= 28) {
+    std::cout << "Warning: player's level is not less than 4. Player is "
+              << _level << "-" << _clock << " now." << std::endl;
+  }
+  if (_deck > 50) {
+    std::cout << "Warning: deck is larger than 50, it's " << _deck << " now."
+              << std::endl;
+  }
+  if (_climax_in_deck + _climax_in_waiting_room > 8) {
+    std::cout << "Warning: player has more than 8 climax." << std::endl;
+  }
+  sethp(_hp);
+  wssim::push_cards_into_deck(deck, card(0, card::CHAR, 0),
+                              _deck - _climax_in_deck);
+  wssim::push_cards_into_deck(deck, card(0, card::CLIMAX, 0), _climax_in_deck);
+  wssim::push_cards_into_deck(waiting_room, card(0, card::CHAR, 0),
+                              _waiting_room - _climax_in_waiting_room);
+  wssim::push_cards_into_deck(waiting_room, card(0, card::CLIMAX, 0),
+                              _climax_in_waiting_room);
 }
 
 int player::gethp() { return level.size() * 7 + clock.size(); }
@@ -236,6 +274,17 @@ bool player::take_damage(int damage) {
   return canceled;
 }
 
+void player::take_true_damage(int damage) {
+  std::vector<card> temp;
+  for (int i = 0; i < damage; i++) {
+    temp.push_back(deck.back());
+    deck.pop_back();
+    refresh_check();
+  }
+  clock.insert(clock.end(), temp.begin(), temp.end());
+  levelup_check();
+}
+
 void player::be_mokaed(int count) {
   int n = count;
   if (deck.size() < count) {
@@ -275,6 +324,25 @@ void player::back_and_shuffle(int count) {
   wssim::shuffle(deck);
 }
 
+void player::back_to_top(int count) {
+  int found_card = 0;
+  std::vector<card> temp;
+  for (auto it = waiting_room.begin(); it != waiting_room.end();) {
+    if (it->type != card::CLIMAX) {
+      temp.push_back(*it);
+      std::iter_swap(it, waiting_room.end() - 1);
+      waiting_room.pop_back();
+      found_card++;
+    } else {
+      it++;
+    }
+    if (found_card >= count) {
+      break;
+    }
+  }
+  deck.insert(deck.end(), temp.begin(), temp.end());
+}
+
 int player::linglong7() {
   int triggers = 0;
   for (int i = 0; i < 7; i++) {
@@ -286,6 +354,25 @@ int player::linglong7() {
   return triggers;
 }
 
+int player::woody6() {
+  int res = 0;
+  std::vector<card> temp;
+  for (int i = 0; i < 6; i++) {
+    if (deck.empty()) {
+      break;
+    }
+    temp.push_back(deck.back());
+    deck.pop_back();
+    if (temp.back().type == card::CLIMAX) {
+      res++;
+    }
+  }
+  deck.insert(deck.end(), temp.begin(), temp.end());
+  wssim::shuffle(deck);
+  return res;
+}
+
+// WARNING: unfinished.
 void output_json(std::string path, const std::map<int, int> res) {
   std::ofstream fout(path, std::ios::out);
 }
