@@ -34,3 +34,4 @@
 # development
 .vscode/
 build/
+out.*

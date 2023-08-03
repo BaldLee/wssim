@@ -6,6 +6,8 @@
 #include <map>
 #include <random>
 
+#include "json.hpp"
+
 /* declare */
 class card;
 class wssim;
@@ -42,6 +44,9 @@ class wssim {
   static bool pattackp(player& atk, player& def, int soul);
 
   static void push_cards_into_deck(std::vector<card>& deck, card card, int num);
+
+  static void basic_bench(int (*sim)(player&, player&), int attacker_deck,
+                          int attacker_triiger, bool json);
 };
 
 class player {
@@ -76,6 +81,7 @@ class player {
                      int _climax_in_waiting_room);
   int gethp();
   void print();
+  bool death_check();
   void refresh_check();
   void levelup_check();
   bool take_damage(int damage);
@@ -128,6 +134,48 @@ bool wssim::pattackp(player& atk, player& def, int soul) {
 void wssim::push_cards_into_deck(std::vector<card>& deck, card card, int num) {
   for (int i = 0; i < num; i++) {
     deck.push_back(card);
+  }
+}
+
+void wssim::basic_bench(int (*sim)(player&, player&), int attacker_deck = 20,
+                        int attacker_trigger = 8, bool json = false) {
+  int REPEAT = 10000;
+  player atk;
+  player def;
+  atk.init_attacker(attacker_deck, attacker_trigger);
+
+  if (json) {
+    nlohmann::json j;
+    double res = 0.0;
+    for (int hp = 14; hp < 28; hp++) {
+      std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+      def.init_defender(hp, 25, 8, 4, 0);
+      j[std::to_string(hp)]["8/25"] = double(sim(atk, def)) / REPEAT;
+      std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
+      def.init_defender(hp, 25, 6, 4, 0);
+      j[std::to_string(hp)]["6/25"] = double(sim(atk, def)) / REPEAT;
+      std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
+      def.init_defender(hp, 30, 8, 4, 0);
+      j[std::to_string(hp)]["8/30"] = double(sim(atk, def)) / REPEAT;
+      std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
+      def.init_defender(hp, 30, 6, 4, 0);
+      j[std::to_string(hp)]["6/30"] = double(sim(atk, def)) / REPEAT;
+      std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
+    }
+    std::ofstream o("out.json");
+    o << std::setw(4) << j << std::endl;
+  } else {
+    for (int hp = 14; hp < 28; hp++) {
+      std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+      def.init_defender(hp, 25, 8, 4, 0);
+      std::cout << "8/25: " << double(sim(atk, def)) / REPEAT << std::endl;
+      def.init_defender(hp, 25, 6, 4, 0);
+      std::cout << "6/25: " << double(sim(atk, def)) / REPEAT << std::endl;
+      def.init_defender(hp, 30, 8, 4, 0);
+      std::cout << "8/30: " << double(sim(atk, def)) / REPEAT << std::endl;
+      def.init_defender(hp, 30, 6, 4, 0);
+      std::cout << "6/30: " << double(sim(atk, def)) / REPEAT << std::endl;
+    }
   }
 }
 
@@ -210,6 +258,8 @@ void player::print() {
   for_each(hands.begin(), hands.end(), [](auto x) { x.print(); });
   std::cout << std::endl;
 }
+
+bool player::death_check() { return level.size() >= 4; }
 
 void player::refresh_check() {
   if (deck.empty()) {
