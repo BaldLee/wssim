@@ -17,10 +17,10 @@ if __name__ == "__main__":
     fig = plt.figure(num=1)
     ax = fig.add_subplot(111)
     x = np.arange(14, 28)
-    ax.plot(x, l8_25,label="8/25")
-    ax.plot(x, l6_25,label="6/25")
-    ax.plot(x, l8_30,label="8/30")
-    ax.plot(x, l6_30,label="6/30")
+    ax.plot(x, l8_25, label="8/25")
+    ax.plot(x, l6_25, label="6/25")
+    ax.plot(x, l8_30, label="8/30")
+    ax.plot(x, l6_30, label="6/30")
     ax.set_xlim(14, 27)
     ax.set_ylim(0, 1)
     ax.set_xticks(np.linspace(14, 27, 14))
@@ -33,6 +33,7 @@ if __name__ == "__main__":
         "0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%",
         "100%"
     ])
+    ax.grid()
     ax.legend()
     plt.show()
     plt.savefig("out.jpg")

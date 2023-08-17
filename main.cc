@@ -17,6 +17,11 @@ int main() {
   // test_3loyd();
   // wssim::basic_bench(test_sim_2woody, 20, 8, true);
   // wssim::basic_bench(test_sim_3woody, 20, 8, true);
-  wssim::basic_bench(test_sim_carcar, 20, 8, true);
+  // wssim::basic_bench(test_sim_carcar, 20, 8, true);
+  // wssim::basic_bench(sim_aki, 20, 8, true);
+  // wssim::basic_bench(test_sim_carcarcar, 20, 8, true);
+  // wssim::basic_bench(sim_karen, 20, 8, true);
+  // wssim::basic_bench_json(sim_itsuki, 20, 8);
+  test_second();
   return 0;
 }

@@ -1,6 +1,7 @@
 #ifndef _WSSIM_HPP_
 #define _WSSIM_HPP_ 1
 #include <algorithm>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -36,17 +37,15 @@ class wssim {
  public:
   wssim() {}
   static void print_deck(const std::vector<card>& deck);
-
   static std::vector<card> shuffle_copy(std::vector<card> deck);
-
   static void shuffle(std::vector<card>& deck);
-
   static bool pattackp(player& atk, player& def, int soul);
-
   static void push_cards_into_deck(std::vector<card>& deck, card card, int num);
-
-  static void basic_bench(int (*sim)(player&, player&), int attacker_deck,
-                          int attacker_triiger, bool json);
+  static void basic_bench(int (*sim)(player&, player&), int attacker_deck = 20,
+                          int attacker_trigger = 8);
+  static void basic_bench_json(int (*sim)(player&, player&),
+                               int attacker_deck = 20, int attacker_trigger = 8,
+                               std::string out_path = "out.json");
 };
 
 class player {
@@ -90,6 +89,7 @@ class player {
   void back_and_shuffle(int count);
   void back_to_top(int count);
   int linglong7();
+  void take_aki_smoke(int smoke);
   int woody6();
 };
 
@@ -137,46 +137,52 @@ void wssim::push_cards_into_deck(std::vector<card>& deck, card card, int num) {
   }
 }
 
-void wssim::basic_bench(int (*sim)(player&, player&), int attacker_deck = 20,
-                        int attacker_trigger = 8, bool json = false) {
+void wssim::basic_bench(int (*sim)(player&, player&), int attacker_deck,
+                        int attacker_trigger) {
   int REPEAT = 10000;
   player atk;
   player def;
   atk.init_attacker(attacker_deck, attacker_trigger);
 
-  if (json) {
-    nlohmann::json j;
-    double res = 0.0;
-    for (int hp = 14; hp < 28; hp++) {
-      std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
-      def.init_defender(hp, 25, 8, 4, 0);
-      j[std::to_string(hp)]["8/25"] = double(sim(atk, def)) / REPEAT;
-      std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
-      def.init_defender(hp, 25, 6, 4, 0);
-      j[std::to_string(hp)]["6/25"] = double(sim(atk, def)) / REPEAT;
-      std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
-      def.init_defender(hp, 30, 8, 4, 0);
-      j[std::to_string(hp)]["8/30"] = double(sim(atk, def)) / REPEAT;
-      std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
-      def.init_defender(hp, 30, 6, 4, 0);
-      j[std::to_string(hp)]["6/30"] = double(sim(atk, def)) / REPEAT;
-      std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
-    }
-    std::ofstream o("out.json");
-    o << std::setw(4) << j << std::endl;
-  } else {
-    for (int hp = 14; hp < 28; hp++) {
-      std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
-      def.init_defender(hp, 25, 8, 4, 0);
-      std::cout << "8/25: " << double(sim(atk, def)) / REPEAT << std::endl;
-      def.init_defender(hp, 25, 6, 4, 0);
-      std::cout << "6/25: " << double(sim(atk, def)) / REPEAT << std::endl;
-      def.init_defender(hp, 30, 8, 4, 0);
-      std::cout << "8/30: " << double(sim(atk, def)) / REPEAT << std::endl;
-      def.init_defender(hp, 30, 6, 4, 0);
-      std::cout << "6/30: " << double(sim(atk, def)) / REPEAT << std::endl;
-    }
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 10, 0);
+    std::cout << "8/25: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 25, 6, 10, 2);
+    std::cout << "6/25: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 30, 8, 10, 0);
+    std::cout << "8/30: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 30, 6, 10, 2);
+    std::cout << "6/30: " << double(sim(atk, def)) / REPEAT << std::endl;
   }
+}
+
+void wssim::basic_bench_json(int (*sim)(player&, player&), int attacker_deck,
+                             int attacker_trigger, std::string out_path) {
+  int REPEAT = 10000;
+  player atk;
+  player def;
+  atk.init_attacker(attacker_deck, attacker_trigger);
+
+  nlohmann::json j;
+  double res = 0.0;
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 10, 0);
+    j[std::to_string(hp)]["8/25"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
+    def.init_defender(hp, 25, 6, 10, 2);
+    j[std::to_string(hp)]["6/25"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
+    def.init_defender(hp, 30, 8, 10, 0);
+    j[std::to_string(hp)]["8/30"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
+    def.init_defender(hp, 30, 6, 10, 2);
+    j[std::to_string(hp)]["6/30"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
+  }
+  std::ofstream o(out_path);
+  o << std::setw(4) << j << std::endl;
 }
 
 /* Class player */
@@ -360,8 +366,7 @@ void player::back_and_shuffle(int count) {
   for (auto it = waiting_room.begin(); it != waiting_room.end();) {
     if (it->type != card::CLIMAX) {
       temp.push_back(*it);
-      std::iter_swap(it, waiting_room.end() - 1);
-      waiting_room.pop_back();
+      it = waiting_room.erase(it);
       found_card++;
     } else {
       it++;
@@ -380,8 +385,7 @@ void player::back_to_top(int count) {
   for (auto it = waiting_room.begin(); it != waiting_room.end();) {
     if (it->type != card::CLIMAX) {
       temp.push_back(*it);
-      std::iter_swap(it, waiting_room.end() - 1);
-      waiting_room.pop_back();
+      it = waiting_room.erase(it);
       found_card++;
     } else {
       it++;
@@ -420,6 +424,44 @@ int player::woody6() {
   deck.insert(deck.end(), temp.begin(), temp.end());
   wssim::shuffle(deck);
   return res;
+}
+
+void player::take_aki_smoke(int smoke) {
+  std::reverse(deck.begin(), deck.end());
+  int smoked = 0;
+  for (int i = 0; i < smoke; i++) {
+    smoked++;
+    if (deck.back().type == card::CLIMAX) {
+      break;
+    } else {
+      deck.pop_back();
+    }
+  }
+
+  int count = 0;
+  for (int i = 0; i < 4; i++) {
+    if (deck.back().type == card::CLIMAX) {
+      count += 1;
+    }
+    deck.pop_back();
+    refresh_check();
+  }
+  std::reverse(deck.begin(), deck.end());
+  for (int i = 0; i < count; i++) {
+    take_damage(1);
+  }
+
+  if (smoke - smoked >= 0) {
+    std::reverse(deck.begin(), deck.end());
+    for (int i = 0; i < smoke - smoked; i++) {
+      if (deck.back().type == card::CLIMAX) {
+        break;
+      } else {
+        deck.pop_back();
+      }
+    }
+    std::reverse(deck.begin(), deck.end());
+  }
 }
 
 // WARNING: unfinished.

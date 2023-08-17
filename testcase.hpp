@@ -828,3 +828,156 @@ void test_3loyd() {
   }
 }
 
+int sim_aki(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    d.take_aki_smoke(3);
+    wssim::pattackp(a, d, 3);
+    d.take_aki_smoke(3);
+    wssim::pattackp(a, d, 3);
+    d.take_aki_smoke(3);
+    wssim::pattackp(a, d, 3);
+
+    if (d.death_check()) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+int sim_karen(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    for (int i = 0; i < 3; i++) {
+      d.take_damage(1);
+      d.be_mokaed(2);
+      wssim::pattackp(a, d, 3);
+    }
+
+    if (d.death_check()) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+int sim_itsuki(player& atk, player& def) {
+  int killed = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    for (int i = 0; i < 3; i++) {
+      d.take_damage(3);
+      d.be_mokaed(3);
+      wssim::pattackp(a, d, 3);
+    }
+
+    if (d.death_check()) {
+      killed += 1;
+    }
+  }
+  return killed;
+}
+
+void test_second() {
+  player atk, def;
+  atk.init_attacker(50, 15);
+  def.init_defender(1, 41, 7, 0, 0);
+  // 1 2 2
+  unsigned long long res0 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    wssim::pattackp(a, d, 1);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 2);
+    res0 += d.clock.size();
+  }
+
+  // 2 1 2
+  unsigned long long res1 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 1);
+    wssim::pattackp(a, d, 2);
+    res1 += d.clock.size();
+  }
+
+  // 2 2 1
+  unsigned long long res2 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 1);
+    res2 += d.clock.size();
+  }
+
+  // fix(2) 1 2
+  unsigned long long res3 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    d.take_damage(2);
+    wssim::pattackp(a, d, 1);
+    wssim::pattackp(a, d, 2);
+    res3 += d.clock.size();
+  }
+
+  // fix(2) 2 1
+  unsigned long long res4 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    d.take_damage(2);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 1);
+    res4 += d.clock.size();
+  }
+
+  // fix(1) 2 2
+  unsigned long long res5 = 0;
+  for (int i = 0; i < REPEAT; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    d.take_damage(1);
+    wssim::pattackp(a, d, 2);
+    wssim::pattackp(a, d, 2);
+    res5 += d.clock.size();
+  }
+
+  std::cout << "1 2 2: " << double(res0) / REPEAT << std::endl;
+  std::cout << "2 1 2: " << double(res1) / REPEAT << std::endl;
+  std::cout << "2 2 1: " << double(res2) / REPEAT << std::endl;
+  std::cout << "fix(2) 1 2: " << double(res3) / REPEAT << std::endl;
+  std::cout << "fix(2) 2 1: " << double(res4) / REPEAT << std::endl;
+  std::cout << "fix(1) 2 2: " << double(res5) / REPEAT << std::endl;
+}
