@@ -981,3 +981,47 @@ void test_second() {
   std::cout << "fix(2) 2 1: " << double(res4) / REPEAT << std::endl;
   std::cout << "fix(1) 2 2: " << double(res5) / REPEAT << std::endl;
 }
+
+int three_two_three_two_three_two(player atk, player def, int inner_repeat) {
+  int res = 0;
+  for (int i = 0; i < inner_repeat; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+    for (int i = 0; i < 3; i++) {
+      wssim::pattackp(a, d, 3);
+      d.take_damage(2);
+    }
+    if (d.death_check()) {
+      res += 1;
+    }
+  }
+  return res;
+}
+
+void test_multithread() {
+  player atk, def;
+  const int outer_repeat = 40;
+  const int inner_repeat = 25000;
+  atk.init_attacker(20, 8);
+  for (int hp = 14; hp < 28; hp++) {
+    def.init_defender(hp, 25, 7, 10, 1);
+    int killed = wssim::multhread_sim(three_two_three_two_three_two, atk, def,
+                                      outer_repeat, 40, inner_repeat);
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << killed << "/"
+              << outer_repeat * inner_repeat << std::endl;
+  }
+}
+
+int foo(int x) { return x + 1; }
+
+void debug() {
+  player atk, def;
+  atk.init_attacker(20, 8);
+  def.init_defender(21, 25, 7, 10, 1);
+  int outer_repeat = 1;
+  int inner_repeat = 1;
+  wssim::multhread_sim(three_two_three_two_three_two, atk, def, outer_repeat,
+                       32, inner_repeat);
+}

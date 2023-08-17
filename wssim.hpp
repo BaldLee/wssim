@@ -7,6 +7,7 @@
 #include <map>
 #include <random>
 
+#include "BS_thread_pool.hpp"
 #include "json.hpp"
 
 /* declare */
@@ -41,6 +42,9 @@ class wssim {
   static void shuffle(std::vector<card>& deck);
   static bool pattackp(player& atk, player& def, int soul);
   static void push_cards_into_deck(std::vector<card>& deck, card card, int num);
+  static int multhread_sim(int (*func)(player, player, int), const player& atk,
+                           const player& def, const int count = 10000,
+                           int thread_num = 1, int inner_repeat = 1);
   static void basic_bench(int (*sim)(player&, player&), int attacker_deck = 20,
                           int attacker_trigger = 8);
   static void basic_bench_json(int (*sim)(player&, player&),
@@ -135,6 +139,24 @@ void wssim::push_cards_into_deck(std::vector<card>& deck, card card, int num) {
   for (int i = 0; i < num; i++) {
     deck.push_back(card);
   }
+}
+
+int wssim::multhread_sim(int (*func)(player, player, int), const player& atk,
+                         const player& def, const int count, int thread_num,
+                         int inner_repeat) {
+  if (thread_num <= 0) {
+    thread_num = std::thread::hardware_concurrency() - 2;
+  }
+  BS::thread_pool pool(thread_num);
+  std::vector<std::future<int>> futures(count);
+  int res = 0;
+  for (int i = 0; i < count; i++) {
+    futures[i] = pool.submit(func, atk, def, inner_repeat);
+  }
+  for (int i = 0; i < count; i++) {
+    res += futures[i].get();
+  }
+  return res;
 }
 
 void wssim::basic_bench(int (*sim)(player&, player&), int attacker_deck,

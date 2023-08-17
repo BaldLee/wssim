@@ -22,6 +22,8 @@ int main() {
   // wssim::basic_bench(test_sim_carcarcar, 20, 8, true);
   // wssim::basic_bench(sim_karen, 20, 8, true);
   // wssim::basic_bench_json(sim_itsuki, 20, 8);
-  test_second();
+  // test_second();
+  test_multithread();
+  // debug();
   return 0;
 }
