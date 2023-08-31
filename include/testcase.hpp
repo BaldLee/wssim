@@ -836,11 +836,11 @@ int sim_aki(player& atk, player& def) {
     wssim::shuffle(a.deck);
     wssim::shuffle(d.deck);
 
-    d.take_aki_smoke(3);
+    d.take_aki_smoke(4);
     wssim::pattackp(a, d, 3);
-    d.take_aki_smoke(3);
+    d.take_aki_smoke(4);
     wssim::pattackp(a, d, 3);
-    d.take_aki_smoke(3);
+    d.take_aki_smoke(4);
     wssim::pattackp(a, d, 3);
 
     if (d.death_check()) {
@@ -1025,3 +1025,4 @@ void debug() {
   wssim::multhread_sim(three_two_three_two_three_two, atk, def, outer_repeat,
                        32, inner_repeat);
 }
+

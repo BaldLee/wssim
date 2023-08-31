@@ -23,7 +23,9 @@ int main() {
   // wssim::basic_bench(sim_karen, 20, 8, true);
   // wssim::basic_bench_json(sim_itsuki, 20, 8);
   // test_second();
-  test_multithread();
+  // test_multithread();
   // debug();
+  // wssim::basic_bench_json(sim_aki, 20, 6);
+  wssim::basic_bench_json(sim_karen, 20, 6);
   return 0;
 }
