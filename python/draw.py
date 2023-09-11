@@ -5,22 +5,20 @@ import numpy as np
 if __name__ == "__main__":
     with open("out.json") as f:
         j = json.load(f)
-    l8_25 = []
-    l6_25 = []
-    l8_30 = []
-    l6_30 = []
+    decks = ["8/25","6/25","8/30","6/30","6/20","4/20","4/15"]
+    l={}
+    for s in decks:
+        l[s] = []
     for i in range(14, 28):
-        l8_25.append(j[str(i)]["8/25"])
-        l6_25.append(j[str(i)]["6/25"])
-        l8_30.append(j[str(i)]["8/30"])
-        l6_30.append(j[str(i)]["6/30"])
+        for s in decks:
+            l[s].append(j[str(i)][s])
+    for s in decks:
+        print(f"{s}: {l[s]}")
     fig = plt.figure(num=1)
     ax = fig.add_subplot(111)
     x = np.arange(14, 28)
-    ax.plot(x, l8_25, label="8/25")
-    ax.plot(x, l6_25, label="6/25")
-    ax.plot(x, l8_30, label="8/30")
-    ax.plot(x, l6_30, label="6/30")
+    for s in decks:
+        ax.plot(x, l[s], label=s)
     ax.set_xlim(14, 27)
     ax.set_ylim(0, 1)
     ax.set_xticks(np.linspace(14, 27, 14))

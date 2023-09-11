@@ -168,14 +168,20 @@ void wssim::basic_bench(int (*sim)(player&, player&), int attacker_deck,
 
   for (int hp = 14; hp < 28; hp++) {
     std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
-    def.init_defender(hp, 25, 8, 10, 0);
+    def.init_defender(hp, 25, 8, 5, 0);
     std::cout << "8/25: " << double(sim(atk, def)) / REPEAT << std::endl;
-    def.init_defender(hp, 25, 6, 10, 2);
+    def.init_defender(hp, 25, 6, 5, 2);
     std::cout << "6/25: " << double(sim(atk, def)) / REPEAT << std::endl;
-    def.init_defender(hp, 30, 8, 10, 0);
+    def.init_defender(hp, 30, 8, 0, 0);
     std::cout << "8/30: " << double(sim(atk, def)) / REPEAT << std::endl;
-    def.init_defender(hp, 30, 6, 10, 2);
+    def.init_defender(hp, 30, 6, 2, 2);
     std::cout << "6/30: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 20, 6, 10, 2);
+    std::cout << "6/20: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 20, 4, 10, 4);
+    std::cout << "4/20: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 15, 4, 15, 4);
+    std::cout << "4/15: " << double(sim(atk, def)) / REPEAT << std::endl;
   }
 }
 
@@ -202,6 +208,15 @@ void wssim::basic_bench_json(int (*sim)(player&, player&), int attacker_deck,
     def.init_defender(hp, 30, 6, 10, 2);
     j[std::to_string(hp)]["6/30"] = double(sim(atk, def)) / REPEAT;
     std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
+    def.init_defender(hp, 20, 6, 10, 2);
+    j[std::to_string(hp)]["6/20"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "6/20: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 20, 4, 10, 4);
+    j[std::to_string(hp)]["4/20"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "4/20: " << double(sim(atk, def)) / REPEAT << std::endl;
+    def.init_defender(hp, 15, 4, 15, 4);
+    j[std::to_string(hp)]["4/15"] = double(sim(atk, def)) / REPEAT;
+    std::cout << "4/15: " << double(sim(atk, def)) / REPEAT << std::endl;
   }
   std::ofstream o(out_path);
   o << std::setw(4) << j << std::endl;
