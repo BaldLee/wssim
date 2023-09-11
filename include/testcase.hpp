@@ -1003,7 +1003,7 @@ int three_two_three_two_three_two(player atk, player def, int inner_repeat) {
 void test_multithread() {
   player atk, def;
   const int outer_repeat = 40;
-  const int inner_repeat = 25000;
+  const int inner_repeat = 2500;
   atk.init_attacker(20, 8);
   for (int hp = 14; hp < 28; hp++) {
     def.init_defender(hp, 25, 7, 10, 1);
@@ -1026,3 +1026,25 @@ void debug() {
                        32, inner_repeat);
 }
 
+int sim_dengeki_asuna(player atk, player def, int inner_repeat) {
+  int killed = 0;
+  for (int i = 0; i < inner_repeat; i++) {
+    auto a = atk;
+    auto d = def;
+    wssim::shuffle(a.deck);
+    wssim::shuffle(d.deck);
+
+    for (int i = 0; i < 3; i++) {
+      if (wssim::pattackp(a, d, 3)) {
+        if (d.take_damage(2)) {
+          d.take_damage(2);
+        }
+      }
+    }
+
+    if (d.death_check()) {
+      killed += 1;
+    }
+  }
+  return killed;
+}

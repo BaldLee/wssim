@@ -5,15 +5,13 @@ import numpy as np
 if __name__ == "__main__":
     with open("out.json") as f:
         j = json.load(f)
-    decks = ["8/25","6/25","8/30","6/30","6/20","4/20","4/15"]
-    l={}
+    decks = ["8/25", "6/25", "8/30", "6/30", "6/20", "4/20", "4/15"]
+    l = {}
     for s in decks:
         l[s] = []
     for i in range(14, 28):
         for s in decks:
             l[s].append(j[str(i)][s])
-    for s in decks:
-        print(f"{s}: {l[s]}")
     fig = plt.figure(num=1)
     ax = fig.add_subplot(111)
     x = np.arange(14, 28)

@@ -26,6 +26,8 @@ int main() {
   // test_multithread();
   // debug();
   // wssim::basic_bench_json(sim_aki, 20, 6);
-  wssim::basic_bench_json(sim_karen, 20, 6);
+  // wssim::basic_bench_json(sim_karen, 20, 6);
+  // wssim::basic_bench_json(sim_dengeki_asuna, 20, 6);
+  wssim::basic_bench_json_parallel(sim_dengeki_asuna, 20, 6);
   return 0;
 }

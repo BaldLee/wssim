@@ -50,6 +50,10 @@ class wssim {
   static void basic_bench_json(int (*sim)(player&, player&),
                                int attacker_deck = 20, int attacker_trigger = 8,
                                std::string out_path = "out.json");
+  static void basic_bench_json_parallel(int (*sim)(player, player, int),
+                                        int attacker_deck = 20,
+                                        int attacker_trigger = 8,
+                                        std::string out_path = "out.json");
 };
 
 class player {
@@ -217,6 +221,66 @@ void wssim::basic_bench_json(int (*sim)(player&, player&), int attacker_deck,
     def.init_defender(hp, 15, 4, 15, 4);
     j[std::to_string(hp)]["4/15"] = double(sim(atk, def)) / REPEAT;
     std::cout << "4/15: " << double(sim(atk, def)) / REPEAT << std::endl;
+  }
+  std::ofstream o(out_path);
+  o << std::setw(4) << j << std::endl;
+}
+
+void wssim::basic_bench_json_parallel(int (*sim)(player, player, int),
+                                      int attacker_deck, int attacker_trigger,
+                                      std::string out_path) {
+  player atk, def;
+  int outer_repeat = 40;
+  int inner_repeat = 2500;
+  int REPEAT = outer_repeat * inner_repeat;
+  atk.init_attacker(attacker_deck, attacker_trigger);
+
+  nlohmann::json j;
+  double res = 0.0;
+  for (int hp = 14; hp < 28; hp++) {
+    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+    def.init_defender(hp, 25, 8, 10, 0);
+    j[std::to_string(hp)]["8/25"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
+    def.init_defender(hp, 25, 6, 10, 2);
+    j[std::to_string(hp)]["6/25"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
+    def.init_defender(hp, 30, 8, 10, 0);
+    j[std::to_string(hp)]["8/30"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
+    def.init_defender(hp, 30, 6, 10, 2);
+    j[std::to_string(hp)]["6/30"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
+    def.init_defender(hp, 20, 6, 10, 2);
+    j[std::to_string(hp)]["6/20"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "6/20: " << j[std::to_string(hp)]["6/20"] << std::endl;
+    def.init_defender(hp, 20, 4, 10, 4);
+    j[std::to_string(hp)]["4/20"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "4/20: " << j[std::to_string(hp)]["4/20"] << std::endl;
+    def.init_defender(hp, 15, 4, 15, 4);
+    j[std::to_string(hp)]["4/15"] =
+        double(wssim::multhread_sim(sim, atk, def, outer_repeat, 40,
+                                    inner_repeat)) /
+        REPEAT;
+    std::cout << "4/15: " << j[std::to_string(hp)]["4/15"] << std::endl;
   }
   std::ofstream o(out_path);
   o << std::setw(4) << j << std::endl;
