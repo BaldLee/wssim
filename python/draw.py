@@ -1,8 +1,18 @@
 import matplotlib.pyplot as plt
 import json
 import numpy as np
+from argparse import ArgumentParser
 
 if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("--title",
+                        "-T",
+                        required=False,
+                        default="",
+                        type=str,
+                        help="the title")
+    args = parser.parse_args()
+
     with open("out.json") as f:
         j = json.load(f)
     decks = ["8/25", "6/25", "8/30", "6/30", "6/20", "4/20", "4/15"]
@@ -31,5 +41,8 @@ if __name__ == "__main__":
     ])
     ax.grid()
     ax.legend()
+    plt.rcParams["font.sans-serif"] = ["SimHei"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.title(args.title)
     plt.show()
     plt.savefig("out.jpg")

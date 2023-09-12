@@ -28,6 +28,10 @@ int main() {
   // wssim::basic_bench_json(sim_aki, 20, 6);
   // wssim::basic_bench_json(sim_karen, 20, 6);
   // wssim::basic_bench_json(sim_dengeki_asuna, 20, 6);
-  wssim::basic_bench_json_parallel(sim_dengeki_asuna, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_3dengeki_asuna, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_2dengeki_asuna_mao, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_3shana, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_3linglong, 20, 17);
+  wssim::basic_bench_json_parallel(sim_2shana_kokei, 20, 6);
   return 0;
 }
