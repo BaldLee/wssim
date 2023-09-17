@@ -34,6 +34,8 @@ class wssim {
  private:
   static std::random_device rd;
   static std::mt19937 gen;
+  static int bench_case(void (*sim)(player, player), player atk, player def,
+                        int inner_repeat);
 
  public:
   wssim() {}
@@ -53,6 +55,9 @@ class wssim {
   static void basic_bench_json_parallel(int (*sim)(player, player, int),
                                         int attacker_deck = 20,
                                         int attacker_trigger = 8,
+                                        std::string out_path = "out.json");
+  static void basic_bench_json_parallel(int (*sim)(player, player, int),
+                                        player& atk,
                                         std::string out_path = "out.json");
 };
 
@@ -229,11 +234,17 @@ void wssim::basic_bench_json(int (*sim)(player&, player&), int attacker_deck,
 void wssim::basic_bench_json_parallel(int (*sim)(player, player, int),
                                       int attacker_deck, int attacker_trigger,
                                       std::string out_path) {
-  player atk, def;
+  player atk;
+  atk.init_attacker(attacker_deck, attacker_trigger);
+  basic_bench_json_parallel(sim, atk, out_path);
+}
+
+void wssim::basic_bench_json_parallel(int (*sim)(player, player, int),
+                                      player& atk, std::string out_path) {
+  player def;
   int outer_repeat = 40;
   int inner_repeat = 2500;
   int REPEAT = outer_repeat * inner_repeat;
-  atk.init_attacker(attacker_deck, attacker_trigger);
 
   nlohmann::json j;
   double res = 0.0;
