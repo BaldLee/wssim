@@ -59,6 +59,7 @@ class wssim {
   static void basic_bench_json_parallel(int (*sim)(player, player, int),
                                         player& atk,
                                         std::string out_path = "out.json");
+  static int clear_except_climax(std::vector<card>& deck);
 };
 
 class player {
@@ -104,6 +105,8 @@ class player {
   int linglong7();
   void take_aki_smoke(int smoke);
   int woody6();
+  int take_zeus(int count);
+  int take_sleep(int count);
 };
 
 /* Defination */
@@ -297,6 +300,19 @@ void wssim::basic_bench_json_parallel(int (*sim)(player, player, int),
   o << std::setw(4) << j << std::endl;
 }
 
+int wssim::clear_except_climax(std::vector<card>& deck) {
+  std::vector<card> new_deck;
+  int res = 0;
+  for (int i = 0; i < deck.size(); i++) {
+    if (deck[i].type == card::CLIMAX) {
+      new_deck.push_back(deck[1]);
+    }
+    res += 1;
+  }
+  deck = new_deck;
+  return res;
+}
+
 /* Class player */
 void player::sethp(int hp) {
   int _level = hp / 7;
@@ -352,6 +368,7 @@ void player::init_defender(int _hp, int _deck, int _climax_in_deck,
                               _waiting_room - _climax_in_waiting_room);
   wssim::push_cards_into_deck(waiting_room, card(0, card::CLIMAX, 0),
                               _climax_in_waiting_room);
+  wssim::push_cards_into_deck(stock, card(0, card::CHAR, 0), 6);
 }
 
 int player::gethp() { return level.size() * 7 + clock.size(); }
@@ -574,6 +591,30 @@ void player::take_aki_smoke(int smoke) {
     }
     std::reverse(deck.begin(), deck.end());
   }
+}
+
+int player::take_zeus(int count) {
+  int res = 0;
+  for (int i = 0; i < count; i++) {
+    if (deck.back().level == 0) {
+      res += 1;
+    }
+    deck.pop_back();
+    refresh_check();
+  }
+  return res;
+};
+
+int player::take_sleep(int count) {
+  int res = 0;
+  for (int i = 0; i < count; i++) {
+    if (deck.back().type == card::CLIMAX) {
+      res += 1;
+    }
+    deck.pop_back();
+    refresh_check();
+  }
+  return res;
 }
 
 // WARNING: unfinished.

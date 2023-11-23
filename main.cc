@@ -37,10 +37,25 @@ int main() {
   // wssim::basic_bench_json_parallel(sim_3woody, 20, 6);
   // wssim::basic_bench_json_parallel(sim_3wuyue, 20, 6);
   // wssim::basic_bench_json_parallel(sim_3liang, 20, 6);
-  player atk;
-  wssim::push_cards_into_deck(atk.deck, card(0, card::CLIMAX, 0), 6);
-  wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 0), 5);
-  wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 1), 4);
-  wssim::basic_bench_json_parallel(sim_3bocchi, atk);
+  // {
+  //   player atk;
+  //   wssim::push_cards_into_deck(atk.deck, card(0, card::CLIMAX, 0), 5);
+  //   wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 0), 10);
+  //   wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 1), 5);
+  //   // wssim::basic_bench_json_parallel(sim_3bocchi, atk);
+  //   // wssim::basic_bench_json_parallel(sim_2bocchi, atk);
+  //   wssim::basic_bench_json_parallel(sim_2bocchi_moshi, atk);
+  // }
+  // wssim::basic_bench_json_parallel(sim_3ryo, 20, 6);
+  test_kana(sim_3kana_1bs_0ds);
+  // wssim::basic_bench_json_parallel(sim_16cost, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_3tkk, 20, 8);
+  // wssim::basic_bench_json_parallel(sim_3sleep, 20, 8);
+
+  // wssim::basic_bench_json_parallel(sim_3liang, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_fanxi_3liang, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_moshi3liang, 20, 6);
+  // wssim::basic_bench_json_parallel(sim_moshi_fanxi_3liang, 20, 6);
+  // qincai();
   return 0;
 }
