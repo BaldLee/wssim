@@ -2,7 +2,7 @@
 
 A simple library for simulating Weiß Schwarz finishers. The code is still under development, and there is no documentation available at this time. If you want to try this project, please refer to `include/testcase.hpp` for guidance.
 
-# Quick Start
+## Quick Start
 
 1. Create a new test case function in `./include/testcase.hpp`.
 2. Update `main.cc` to call the new function. (The `wssim::basic_bench` function may be helpful.)
@@ -22,6 +22,6 @@ $ pip install matplotlib numpy
 $ python draw.py #in build dir
 ```
 
-# Third party library
+## Third party library
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
