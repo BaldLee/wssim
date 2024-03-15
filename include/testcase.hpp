@@ -830,47 +830,47 @@ constexpr int REPEAT = 10000;
 //   }
 // }
 
-int sim_aki(player& atk, player& def) {
-  int killed = 0;
-  for (int i = 0; i < REPEAT; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+int sim_aki(player &atk, player &def) {
+    int killed = 0;
+    for (int i = 0; i < REPEAT; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    d.take_aki_smoke(3);
-    wssim::pattackp(a, d, 3);
-    d.take_aki_smoke(3);
-    wssim::pattackp(a, d, 3);
-    d.take_aki_smoke(3);
-    wssim::pattackp(a, d, 3);
+        d.take_aki_smoke(3);
+        wssim::pattackp(a, d, 3);
+        d.take_aki_smoke(3);
+        wssim::pattackp(a, d, 3);
+        d.take_aki_smoke(3);
+        wssim::pattackp(a, d, 3);
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
-int sim_karen(player& atk, player& def) {
-  int killed = 0;
-  for (int i = 0; i < REPEAT; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+int sim_karen(player &atk, player &def) {
+    int killed = 0;
+    for (int i = 0; i < REPEAT; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(1);
-      d.be_mokaed(2);
-      wssim::pattackp(a, d, 3);
-    }
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(1);
+            d.be_mokaed(2);
+            wssim::pattackp(a, d, 3);
+        }
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 // int sim_itsuki(player& atk, player& def) {
@@ -1053,33 +1053,33 @@ int sim_karen(player& atk, player& def) {
 // }
 
 int sim_2dengeki_asuna_mao(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    int killed = 0;
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    wssim::pattackp(a, d, 3);
-    for (int i = 0; i < 2; i++) {
-      if (wssim::pattackp(a, d, 3)) {
-        if (d.take_damage(2)) {
-          if (!d.take_damage(2)) {
-            d.take_damage(1);
-          }
-        } else {
-          d.take_damage(1);
+        wssim::pattackp(a, d, 3);
+        for (int i = 0; i < 2; i++) {
+            if (wssim::pattackp(a, d, 3)) {
+                if (d.take_damage(2)) {
+                    if (!d.take_damage(2)) {
+                        d.take_damage(1);
+                    }
+                } else {
+                    d.take_damage(1);
+                }
+            } else {
+                d.take_damage(1);
+            }
         }
-      } else {
-        d.take_damage(1);
-      }
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 // int sim_3shana(player atk, player def, int inner_repeat) {
@@ -1290,696 +1290,936 @@ int sim_2dengeki_asuna_mao(player atk, player def, int inner_repeat) {
 // }
 
 int sim_3bocchi(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      for (int k = 0; k < 2; k++) {
-        if (a.deck.back().type == card::CLIMAX) {
-          d.take_damage(2);
-        } else {
-          d.take_damage(1);
+        for (int i = 0; i < 3; i++) {
+            for (int k = 0; k < 2; k++) {
+                if (a.deck.back().type == card::CLIMAX) {
+                    d.take_damage(2);
+                } else {
+                    d.take_damage(1);
+                }
+                a.deck.pop_back();
+            }
+            wssim::pattackp(a, d, 3);
         }
-        a.deck.pop_back();
-      }
-      wssim::pattackp(a, d, 3);
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_2bocchi(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 2; i++) {
-      for (int k = 0; k < 2; k++) {
-        if (a.deck.back().type == card::CLIMAX) {
-          d.take_damage(2);
-        } else {
-          d.take_damage(1);
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < 2; k++) {
+                if (a.deck.back().type == card::CLIMAX) {
+                    d.take_damage(2);
+                } else {
+                    d.take_damage(1);
+                }
+                a.deck.pop_back();
+            }
+            wssim::pattackp(a, d, 3);
         }
-        a.deck.pop_back();
-      }
-      wssim::pattackp(a, d, 3);
-    }
 
-    wssim::pattackp(a, d, 3);
+        wssim::pattackp(a, d, 3);
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_2bocchi_moshi(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  wssim::push_cards_into_deck(def.stock, card(0, card::CHAR, 0), 6);
+    int killed = 0;
+    wssim::push_cards_into_deck(def.stock, card(0, card::CHAR, 0), 6);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
-    int s = d.stock.size();
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+        int s = d.stock.size();
 
-    d.deck.insert(d.deck.end(), d.stock.begin(), d.stock.end());
-    d.stock.clear();
-    wssim::shuffle(d.deck);
-    for (int i = 0; i < s; i++) {
-      d.stock.push_back(d.deck.back());
-      d.deck.pop_back();
-    }
-
-    for (int i = 0; i < 2; i++) {
-      for (int k = 0; k < 2; k++) {
-        if (a.deck.back().type == card::CLIMAX) {
-          d.take_damage(2);
-        } else {
-          d.take_damage(1);
+        d.deck.insert(d.deck.end(), d.stock.begin(), d.stock.end());
+        d.stock.clear();
+        wssim::shuffle(d.deck);
+        for (int i = 0; i < s; i++) {
+            d.stock.push_back(d.deck.back());
+            d.deck.pop_back();
         }
-        a.deck.pop_back();
-      }
-      wssim::pattackp(a, d, 3);
-    }
 
-    wssim::pattackp(a, d, 3);
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < 2; k++) {
+                if (a.deck.back().type == card::CLIMAX) {
+                    d.take_damage(2);
+                } else {
+                    d.take_damage(1);
+                }
+                a.deck.pop_back();
+            }
+            wssim::pattackp(a, d, 3);
+        }
 
-    if (d.death_check()) {
-      killed += 1;
+        wssim::pattackp(a, d, 3);
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_3ryo(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(3);
-      wssim::pattackp(a, d, 3);
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(3);
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_2bocchi_1ryo(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 2; i++) {
-      for (int k = 0; k < 2; k++) {
-        if (a.deck.back().type == card::CLIMAX) {
-          d.take_damage(2);
-        } else {
-          d.take_damage(1);
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < 2; k++) {
+                if (a.deck.back().type == card::CLIMAX) {
+                    d.take_damage(2);
+                } else {
+                    d.take_damage(1);
+                }
+                a.deck.pop_back();
+            }
+            wssim::pattackp(a, d, 3);
         }
-        a.deck.pop_back();
-      }
-      wssim::pattackp(a, d, 3);
-    }
 
-    d.back_and_shuffle(3);
-    wssim::pattackp(a, d, 3);
+        d.back_and_shuffle(3);
+        wssim::pattackp(a, d, 3);
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_3kana(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  auto nc = wssim::clear_except_climax(def.deck);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    int killed = 0;
+    auto nc = wssim::clear_except_climax(def.deck);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      if (wssim::pattackp(a, d, 3)) {
-        int nz = d.take_zeus(3);
-        for (int z = 0; z < nz; z++) {
-          d.take_damage(2);
+        for (int i = 0; i < 3; i++) {
+            if (wssim::pattackp(a, d, 3)) {
+                int nz = d.take_zeus(3);
+                for (int z = 0; z < nz; z++) {
+                    d.take_damage(2);
+                }
+            }
         }
-      }
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_2kana(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  auto nc = wssim::clear_except_climax(def.deck);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    int killed = 0;
+    auto nc = wssim::clear_except_climax(def.deck);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 2; i++) {
-      if (wssim::pattackp(a, d, 3)) {
-        int nz = d.take_zeus(3);
-        for (int z = 0; z < nz; z++) {
-          d.take_damage(2);
+        for (int i = 0; i < 2; i++) {
+            if (wssim::pattackp(a, d, 3)) {
+                int nz = d.take_zeus(3);
+                for (int z = 0; z < nz; z++) {
+                    d.take_damage(2);
+                }
+            }
         }
-      }
-    }
 
-    wssim::pattackp(a, d, 3);
+        wssim::pattackp(a, d, 3);
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_3kana_1bs_1ds(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  auto nc = wssim::clear_except_climax(def.deck);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    int killed = 0;
+    auto nc = wssim::clear_except_climax(def.deck);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, 45);
-    auto random_res = dist(gen);
-    bool greater_than_one = false;
-    bool soul_trigger = false;
-    if (random_res < 15) {
-      greater_than_one = true;
-    }
-
-    int soul_arr[3] = {4, 4, 3};
-    if (greater_than_one) {
-      soul_arr[2] += 1;
-    }
-
-    for (int i = 0; i < 3; i++) {
-      if (wssim::pattackp(a, d, soul_arr[i])) {
-        int nz = d.take_zeus(3);
-        for (int z = 0; z < nz; z++) {
-          d.take_damage(2);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(0, 45);
+        auto random_res = dist(gen);
+        bool greater_than_one = false;
+        bool soul_trigger = false;
+        if (random_res < 15) {
+            greater_than_one = true;
         }
-      }
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        int soul_arr[3] = {4, 4, 3};
+        if (greater_than_one) {
+            soul_arr[2] += 1;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (wssim::pattackp(a, d, soul_arr[i])) {
+                int nz = d.take_zeus(3);
+                for (int z = 0; z < nz; z++) {
+                    d.take_damage(2);
+                }
+            }
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_2kana_1bs_1ds(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  auto nc = wssim::clear_except_climax(def.deck);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    int killed = 0;
+    auto nc = wssim::clear_except_climax(def.deck);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, 45);
-    auto random_res = dist(gen);
-    bool greater_than_one = false;
-    bool soul_trigger = false;
-    if (random_res < 15) {
-      greater_than_one = true;
-    }
-
-    int soul_arr[3] = {4, 4, 3};
-    if (greater_than_one) {
-      soul_arr[1] += 1;
-    }
-
-    for (int i = 0; i < 2; i++) {
-      if (wssim::pattackp(a, d, soul_arr[i])) {
-        int nz = d.take_zeus(3);
-        for (int z = 0; z < nz; z++) {
-          d.take_damage(2);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(0, 45);
+        auto random_res = dist(gen);
+        bool greater_than_one = false;
+        bool soul_trigger = false;
+        if (random_res < 15) {
+            greater_than_one = true;
         }
-      }
-    }
 
-    wssim::pattackp(a, d, soul_arr[2]);
+        int soul_arr[3] = {4, 4, 3};
+        if (greater_than_one) {
+            soul_arr[1] += 1;
+        }
 
-    if (d.death_check()) {
-      killed += 1;
+        for (int i = 0; i < 2; i++) {
+            if (wssim::pattackp(a, d, soul_arr[i])) {
+                int nz = d.take_zeus(3);
+                for (int z = 0; z < nz; z++) {
+                    d.take_damage(2);
+                }
+            }
+        }
+
+        wssim::pattackp(a, d, soul_arr[2]);
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_3kana_1bs_0ds(player atk, player def, int inner_repeat) {
-  int killed = 0;
-  auto nc = wssim::clear_except_climax(def.deck);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    int killed = 0;
+    auto nc = wssim::clear_except_climax(def.deck);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, 45);
-    auto random_res = dist(gen);
-    bool greater_than_one = false;
-    bool soul_trigger = false;
-    if (random_res < 15) {
-      greater_than_one = true;
-    }
-
-    int soul_arr[3] = {3, 3, 3};
-    if (greater_than_one) {
-      soul_arr[2] += 1;
-    }
-
-    for (int i = 0; i < 3; i++) {
-      if (wssim::pattackp(a, d, soul_arr[i])) {
-        int nz = d.take_zeus(3);
-        for (int z = 0; z < nz; z++) {
-          d.take_damage(2);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(0, 45);
+        auto random_res = dist(gen);
+        bool greater_than_one = false;
+        bool soul_trigger = false;
+        if (random_res < 15) {
+            greater_than_one = true;
         }
-      }
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        int soul_arr[3] = {3, 3, 3};
+        if (greater_than_one) {
+            soul_arr[2] += 1;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (wssim::pattackp(a, d, soul_arr[i])) {
+                int nz = d.take_zeus(3);
+                for (int z = 0; z < nz; z++) {
+                    d.take_damage(2);
+                }
+            }
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
-void init_kana_def(player& def, int hp, int deck, int climax) {
-  def.sethp(hp);
-  def.deck.clear();
-  def.waiting_room.clear();
-  int nc = deck - climax;
-  int waiting = 35 - deck;
-  int waitingc = 8 - climax;
-  int nwc = waiting - waitingc;
-  wssim::push_cards_into_deck(def.deck, card(0, card::CLIMAX, 0), climax);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
-  wssim::push_cards_into_deck(def.waiting_room, card(0, card::CLIMAX, 0),
-                              waitingc);
-  wssim::push_cards_into_deck(def.waiting_room, card(0, card::CHAR, 0),
-                              nwc / 2);
-  wssim::push_cards_into_deck(def.waiting_room, card(1, card::CHAR, 0),
-                              nwc - nwc / 2);
+void init_kana_def(player &def, int hp, int deck, int climax) {
+    def.sethp(hp);
+    def.deck.clear();
+    def.waiting_room.clear();
+    int nc = deck - climax;
+    int waiting = 35 - deck;
+    int waitingc = 8 - climax;
+    int nwc = waiting - waitingc;
+    wssim::push_cards_into_deck(def.deck, card(0, card::CLIMAX, 0), climax);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), nc / 2);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), nc - nc / 2);
+    wssim::push_cards_into_deck(def.waiting_room, card(0, card::CLIMAX, 0),
+                                waitingc);
+    wssim::push_cards_into_deck(def.waiting_room, card(0, card::CHAR, 0),
+                                nwc / 2);
+    wssim::push_cards_into_deck(def.waiting_room, card(1, card::CHAR, 0),
+                                nwc - nwc / 2);
 }
 
 void test_kana(int (*sim_kana)(player, player, int)) {
-  player def, atk;
-  atk.init_attacker(20, 6);
-  int outer_repeat = 40;
-  int inner_repeat = 2500;
-  int REPEAT = outer_repeat * inner_repeat;
+    player def, atk;
+    atk.init_attacker(20, 6);
+    int outer_repeat = 40;
+    int inner_repeat = 2500;
+    int REPEAT = outer_repeat * inner_repeat;
 
-  nlohmann::json j;
-  double res = 0.0;
-  for (int hp = 14; hp < 28; hp++) {
-    std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
-    init_kana_def(def, hp, 25, 8);
-    j[std::to_string(hp)]["8/25"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
-    init_kana_def(def, hp, 25, 6);
-    j[std::to_string(hp)]["6/25"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
-    init_kana_def(def, hp, 30, 8);
-    j[std::to_string(hp)]["8/30"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
-    init_kana_def(def, hp, 30, 6);
-    j[std::to_string(hp)]["6/30"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
-    init_kana_def(def, hp, 20, 6);
-    j[std::to_string(hp)]["6/20"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "6/20: " << j[std::to_string(hp)]["6/20"] << std::endl;
-    init_kana_def(def, hp, 20, 4);
-    j[std::to_string(hp)]["4/20"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "4/20: " << j[std::to_string(hp)]["4/20"] << std::endl;
-    init_kana_def(def, hp, 15, 4);
-    j[std::to_string(hp)]["4/15"] =
-        double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
-                                    inner_repeat)) /
-        REPEAT;
-    std::cout << "4/15: " << j[std::to_string(hp)]["4/15"] << std::endl;
-  }
-  std::ofstream o("out.json");
-  o << std::setw(4) << j << std::endl;
+    nlohmann::json j;
+    double res = 0.0;
+    for (int hp = 14; hp < 28; hp++) {
+        std::cout << hp / 7 << "-" << hp % 7 << ": " << std::endl;
+        init_kana_def(def, hp, 25, 8);
+        j[std::to_string(hp)]["8/25"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "8/25: " << j[std::to_string(hp)]["8/25"] << std::endl;
+        init_kana_def(def, hp, 25, 6);
+        j[std::to_string(hp)]["6/25"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "6/25: " << j[std::to_string(hp)]["6/25"] << std::endl;
+        init_kana_def(def, hp, 30, 8);
+        j[std::to_string(hp)]["8/30"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "8/30: " << j[std::to_string(hp)]["8/30"] << std::endl;
+        init_kana_def(def, hp, 30, 6);
+        j[std::to_string(hp)]["6/30"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "6/30: " << j[std::to_string(hp)]["6/30"] << std::endl;
+        init_kana_def(def, hp, 20, 6);
+        j[std::to_string(hp)]["6/20"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "6/20: " << j[std::to_string(hp)]["6/20"] << std::endl;
+        init_kana_def(def, hp, 20, 4);
+        j[std::to_string(hp)]["4/20"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "4/20: " << j[std::to_string(hp)]["4/20"] << std::endl;
+        init_kana_def(def, hp, 15, 4);
+        j[std::to_string(hp)]["4/15"] =
+            double(wssim::multhread_sim(sim_kana, atk, def, outer_repeat, 40,
+                                        inner_repeat)) /
+            REPEAT;
+        std::cout << "4/15: " << j[std::to_string(hp)]["4/15"] << std::endl;
+    }
+    std::ofstream o("out.json");
+    o << std::setw(4) << j << std::endl;
 }
 
 int sim_16cost(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      if (d.take_damage(2)) {
-        if (d.take_damage(1)) {
-          d.take_damage(1);
-          wssim::pattackp(a, d, 2);
-        } else {
-          if (wssim::pattackp(a, d, 2)) {
-            d.take_damage(1);
-          }
+        for (int i = 0; i < 3; i++) {
+            if (d.take_damage(2)) {
+                if (d.take_damage(1)) {
+                    d.take_damage(1);
+                    wssim::pattackp(a, d, 2);
+                } else {
+                    if (wssim::pattackp(a, d, 2)) {
+                        d.take_damage(1);
+                    }
+                }
+            } else {
+                if (wssim::pattackp(a, d, 2)) {
+                    if (d.take_damage(1)) {
+                        d.take_damage(1);
+                    }
+                }
+            }
         }
-      } else {
-        if (wssim::pattackp(a, d, 2)) {
-          if (d.take_damage(1)) {
-            d.take_damage(1);
-          }
-        }
-      }
-    }
 
-    if (d.death_check()) {
-      killed += 1;
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-  }
-  return killed;
+    return killed;
 }
 
 int sim_3tkk(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(2);
-      bool found = false;
-      for (int k = 0; k < 3 && k < d.deck.size(); k++) {
-        if (d.deck[i].type == card::CLIMAX) {
-          found = true;
-          break;
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(2);
+            bool found = false;
+            for (int k = 0; k < 3 && k < d.deck.size(); k++) {
+                if (d.deck[i].type == card::CLIMAX) {
+                    found = true;
+                    break;
+                }
+            }
+            wssim::shuffle(d.deck);
+            if (found) {
+                d.take_damage(2);
+            }
+            wssim::pattackp(a, d, 3);
         }
-      }
-      wssim::shuffle(d.deck);
-      if (found) {
-        d.take_damage(2);
-      }
-      wssim::pattackp(a, d, 3);
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
 
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 int sim_3sleep(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      int res = d.take_sleep(7);
-      for (int k = 0; k < res; k++) {
-        d.take_damage(3);
-      }
+        for (int i = 0; i < 3; i++) {
+            int res = d.take_sleep(7);
+            for (int k = 0; k < res; k++) {
+                d.take_damage(3);
+            }
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
 
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 int sim_3liang(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(3);
-      wssim::pattackp(a, d, 3);
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(3);
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
 
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 int sim_moshi3liang(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    int s = d.stock.size();
-    for (int i = 0; i < s; i++) {
-      d.deck.push_back(d.stock.back());
-      d.stock.pop_back();
+        int s = d.stock.size();
+        for (int i = 0; i < s; i++) {
+            d.deck.push_back(d.stock.back());
+            d.stock.pop_back();
+        }
+        wssim::shuffle(d.deck);
+        for (int i = 0; i < s; i++) {
+            d.stock.push_back(d.deck.back());
+            d.deck.pop_back();
+        }
+
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(3);
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-    wssim::shuffle(d.deck);
-    for (int i = 0; i < s; i++) {
-      d.stock.push_back(d.deck.back());
-      d.deck.pop_back();
-    }
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(3);
-      wssim::pattackp(a, d, 3);
-    }
-
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 int sim_fanxi_3liang(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    int w = d.waiting_room.size();
-    for (int i = 0; i < w; i++) {
-      if (d.waiting_room.back().type == card::CLIMAX) {
-        auto temp = d.waiting_room.back();
-        d.waiting_room.pop_back();
-        d.deck.insert(d.deck.end(), d.waiting_room.begin(),
-                      d.waiting_room.end());
-        d.waiting_room.clear();
-        d.waiting_room.push_back(temp);
-        break;
-      }
-      d.deck.push_back(d.waiting_room.back());
-      d.waiting_room.pop_back();
+        int w = d.waiting_room.size();
+        for (int i = 0; i < w; i++) {
+            if (d.waiting_room.back().type == card::CLIMAX) {
+                auto temp = d.waiting_room.back();
+                d.waiting_room.pop_back();
+                d.deck.insert(d.deck.end(), d.waiting_room.begin(),
+                              d.waiting_room.end());
+                d.waiting_room.clear();
+                d.waiting_room.push_back(temp);
+                break;
+            }
+            d.deck.push_back(d.waiting_room.back());
+            d.waiting_room.pop_back();
+        }
+
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(3);
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
 
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(3);
-      wssim::pattackp(a, d, 3);
-    }
-
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 int sim_moshi_fanxi_3liang(player atk, player def, int inner_repeat) {
-  int killed = 0;
+    int killed = 0;
 
-  for (int i = 0; i < inner_repeat; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    int s = d.stock.size();
-    for (int i = 0; i < s; i++) {
-      d.deck.push_back(d.stock.back());
-      d.stock.pop_back();
+        int s = d.stock.size();
+        for (int i = 0; i < s; i++) {
+            d.deck.push_back(d.stock.back());
+            d.stock.pop_back();
+        }
+        wssim::shuffle(d.deck);
+        for (int i = 0; i < s; i++) {
+            d.stock.push_back(d.deck.back());
+            d.deck.pop_back();
+        }
+
+        int w = d.waiting_room.size();
+        for (int i = 0; i < w; i++) {
+            if (d.waiting_room.back().type == card::CLIMAX) {
+                auto temp = d.waiting_room.back();
+                d.waiting_room.pop_back();
+                d.deck.insert(d.deck.end(), d.waiting_room.begin(),
+                              d.waiting_room.end());
+                d.waiting_room.clear();
+                d.waiting_room.push_back(temp);
+                break;
+            }
+            d.deck.push_back(d.waiting_room.back());
+            d.waiting_room.pop_back();
+        }
+
+        for (int i = 0; i < 3; i++) {
+            d.take_damage(3);
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
-    wssim::shuffle(d.deck);
-    for (int i = 0; i < s; i++) {
-      d.stock.push_back(d.deck.back());
-      d.deck.pop_back();
-    }
 
-    int w = d.waiting_room.size();
-    for (int i = 0; i < w; i++) {
-      if (d.waiting_room.back().type == card::CLIMAX) {
-        auto temp = d.waiting_room.back();
-        d.waiting_room.pop_back();
-        d.deck.insert(d.deck.end(), d.waiting_room.begin(),
-                      d.waiting_room.end());
-        d.waiting_room.clear();
-        d.waiting_room.push_back(temp);
-        break;
-      }
-      d.deck.push_back(d.waiting_room.back());
-      d.waiting_room.pop_back();
-    }
-
-    for (int i = 0; i < 3; i++) {
-      d.take_damage(3);
-      wssim::pattackp(a, d, 3);
-    }
-
-    if (d.death_check()) {
-      killed += 1;
-    }
-  }
-
-  return killed;
+    return killed;
 }
 
 void qincai() {
-  player def;
-  player atk;
-  wssim::push_cards_into_deck(def.deck, card(0, card::CLIMAX, 0), 8);
-  wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), 4);
-  wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), 38);
+    player def;
+    player atk;
+    wssim::push_cards_into_deck(def.deck, card(0, card::CLIMAX, 0), 8);
+    wssim::push_cards_into_deck(def.deck, card(1, card::CHAR, 0), 4);
+    wssim::push_cards_into_deck(def.deck, card(0, card::CHAR, 0), 38);
 
-  wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 1), 14);
-  wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 0), 36);
+    wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 1), 14);
+    wssim::push_cards_into_deck(atk.deck, card(0, card::CHAR, 0), 36);
 
-  int res[5] = {0};
+    int res[5] = {0};
 
-  for (int i = 0; i < 5000000; i++) {
-    auto a = atk;
-    auto d = def;
-    wssim::shuffle(a.deck);
-    wssim::shuffle(d.deck);
+    for (int i = 0; i < 5000000; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
 
-    int count = 0;
-    for (int k = 0; k < 5; k++) {
-      d.hands.push_back(d.deck.back());
-      if (d.deck.back().level == 1) {
-        count += 1;
-      }
-      d.deck.pop_back();
+        int count = 0;
+        for (int k = 0; k < 5; k++) {
+            d.hands.push_back(d.deck.back());
+            if (d.deck.back().level == 1) {
+                count += 1;
+            }
+            d.deck.pop_back();
+        }
+
+        for (int k = 0; k < 7; k++) {
+            a.hands.push_back(a.deck.back());
+            a.deck.pop_back();
+        }
+
+        wssim::pattackp(a, d, 2);
+
+        for (int k = 0; k < d.waiting_room.size(); k++) {
+            if (d.waiting_room[k].level == 1) {
+                count += 1;
+            }
+        }
+
+        res[count] += 1;
     }
 
-    for (int k = 0; k < 7; k++) {
-      a.hands.push_back(a.deck.back());
-      a.deck.pop_back();
+    std::cout << res[0] << "," << res[1] << "," << res[2] << "," << res[3]
+              << "," << res[4] << std::endl;
+}
+
+int sim_3xiaomeng(player atk, player def, int inner_repeat) {
+    int killed = 0;
+
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        for (int i = 0; i < 3; i++) {
+            if (wssim::pattackp(a, d, 3)) {
+                if (d.take_damage(3)) {
+                    d.take_damage(3);
+                }
+            }
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
     }
 
-    wssim::pattackp(a, d, 2);
+    return killed;
+}
 
-    for (int k = 0; k < d.waiting_room.size(); k++) {
-      if (d.waiting_room[k].level == 1) {
-        count += 1;
-      }
+void sim_mos_problem() {
+    // mos减魂刀问题。自己3-3，两路空场，对面正击打3。对面算上再动还有一脚5一脚4一脚6，手里有减2魂刀应该怎么交
+    player atk;
+    player def;
+    atk.init_attacker(20, 0);
+    def.init_defender(24, 17, 6, 10, 1);
+    int REPAET = 100000;
+
+    int killed[4] = {0, 0, 0, 0};
+    // 交联动3
+    for (int i = 0; i < REPAET; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        int chuchu = 5;
+        int triggered = 0;
+        a.take_damage(1);
+        wssim::pattackp(a, d, chuchu, triggered);
+        chuchu += triggered + 1;
+        wssim::pattackp(a, d, 4);
+        wssim::pattackp(a, d, chuchu);
+
+        if (d.death_check()) {
+            killed[0] += 1;
+        }
+    }
+    // 交联动4
+    for (int i = 0; i < REPAET; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        int chuchu = 5;
+        int triggered = 0;
+        a.take_damage(3);
+        wssim::pattackp(a, d, chuchu, triggered);
+        chuchu += triggered + 1;
+        wssim::pattackp(a, d, 2);
+        wssim::pattackp(a, d, chuchu);
+
+        if (d.death_check()) {
+            killed[1] += 1;
+        }
+    }
+    // 交再动
+    for (int i = 0; i < REPAET; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        int chuchu = 3;
+        int triggered = 0;
+        a.take_damage(3);
+        wssim::pattackp(a, d, chuchu, triggered);
+        chuchu += triggered + 1;
+        wssim::pattackp(a, d, 4);
+        wssim::pattackp(a, d, chuchu);
+
+        if (d.death_check()) {
+            killed[2] += 1;
+        }
+    }
+    // 不交
+    for (int i = 0; i < REPAET; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        int chuchu = 3;
+        int triggered = 0;
+        a.take_damage(3);
+        wssim::pattackp(a, d, chuchu, triggered);
+        chuchu += triggered + 1;
+        wssim::pattackp(a, d, 4);
+        wssim::pattackp(a, d, chuchu);
+
+        if (d.death_check()) {
+            killed[3] += 1;
+        }
     }
 
-    res[count] += 1;
-  }
+    std::cout << killed[0] << "," << killed[1] << "," << killed[2] << ","
+              << killed[3] << std::endl;
+}
 
-  std::cout << res[0] << "," << res[1] << "," << res[2] << "," << res[3] << ","
-            << res[4] << std::endl;
+int sim_3mai(player atk, player def, int inner_repeat) {
+    int killed = 0;
+    int x = 3;
+
+    for (int i = 0; i < inner_repeat; i++) {
+        auto a = atk;
+        auto d = def;
+        wssim::shuffle(a.deck);
+        wssim::shuffle(d.deck);
+
+        for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < x; i++) {
+                bool hit = false;
+                std::reverse(d.deck.begin(), d.deck.end());
+                for (int i = 0; i < 2; i++) {
+                    if (d.deck.back().type == card::CLIMAX) {
+                        hit = true;
+                    }
+                    d.deck.pop_back();
+                }
+                std::reverse(d.deck.begin(), d.deck.end());
+                if (hit) {
+                    d.take_damage(2);
+                }
+            }
+            wssim::pattackp(a, d, 3);
+        }
+
+        if (d.death_check()) {
+            killed += 1;
+        }
+    }
+
+    return killed;
+}
+
+void sim_torch_problem() {
+    // 卡组5张2潮 己方3-4 对手最后一脚正击打3 无职松明应该怎么推牌
+    // (假设更新后30张8潮)
+
+    player def;
+    def.init_defender(3 * 7 + 4, 5, 2, 26, 6);
+
+    double killed = 0.0;
+    int inner_repeat = 100000;
+
+    // do nothing
+    for (int i = 0; i < inner_repeat; i++) {
+        auto d = def;
+        wssim::shuffle(d.deck);
+
+        d.take_damage(3);
+
+        if (d.death_check()) {
+            killed += 1;
+        }
+    }
+    std::cout << killed / inner_repeat << std::endl;
+
+    // mill 1
+    killed = 0;
+    for (int i = 0; i < inner_repeat; i++) {
+        auto d = def;
+        wssim::shuffle(d.deck);
+
+        d.deck.pop_back();
+        d.take_damage(3);
+        if (d.death_check()) {
+            killed += 1;
+        }
+    }
+    std::cout << killed / inner_repeat << std::endl;
+
+    // smart torch
+    killed = 0;
+    for (int i = 0; i < inner_repeat; i++) {
+        auto d = def;
+        wssim::shuffle(d.deck);
+
+        if (d.deck.back().type != card::CLIMAX) {
+            d.waiting_room.push_back(d.deck.back());
+            d.deck.pop_back();
+            d.take_damage(3);
+        } else {
+            d.deck.pop_back();
+            if (d.deck.back().type != card::CLIMAX) {
+                d.waiting_room.push_back(d.deck.back());
+                d.deck.pop_back();
+                d.take_damage(3);
+            } else {
+                d.waiting_room.push_back(d.deck.back());
+                d.deck.pop_back();
+                d.waiting_room.push_back(d.deck.back());
+                d.deck.pop_back();
+                d.waiting_room.push_back(d.deck.back());
+                d.deck.pop_back();
+                std::reverse(d.deck.begin(), d.deck.end());
+                d.deck.push_back(card(1, card::EVENT, 0));
+                std::reverse(d.deck.begin(), d.deck.end());
+                d.take_damage(3);
+            }
+        }
+        if (d.death_check()) {
+            killed += 1;
+        }
+    }
+    std::cout << killed / inner_repeat << std::endl;
+}
+
+void random_test() {
+    player def;
+    def.init_defender(3 * 7 + 4, 5, 2, 26, 6);
+
+    for (int i = 0; i < 100; i++) {
+        double killed = 0.0;
+        for (int i = 0; i < 20000; i++) {
+            auto d = def;
+            wssim::shuffle(d.deck);
+            d.take_damage(3);
+            if (d.death_check()) killed += 1;
+        }
+        std::cout << killed / 20000 << ',';
+    }
 }
