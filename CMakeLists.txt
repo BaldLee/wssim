@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.14)
-project(wssim_app)
+cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(include)
+add_library(deck_library STATIC src/utils/deck.cc src/utils/card.cc)
 
-add_executable(wssim_app main.cc)
-target_link_libraries(wssim_app libtestcase)
+target_include_directories(deck_library PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/python/draw.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+add_executable(decktest test/testdeck.cc)
+
+target_link_libraries(decktest PRIVATE deck_library)
