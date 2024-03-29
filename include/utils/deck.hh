@@ -36,11 +36,16 @@ class deck {
         return bottom;
     }
 
-    inline void print() const {
+    inline std::string to_str() const {
+        std::stringstream ss;
+        ss << '[';
         std::for_each(__card_deque.begin(), __card_deque.end(),
-                      [](auto x) { x.print(); });
-        std::cout << std::endl;
+                      [&](auto x) { ss << x.to_str() << ','; });
+        ss << ']';
+        return ss.str();
     }
+
+    inline void print() const { std::cout << to_str() << std::endl; }
 
     inline void shuffle() {
         std::shuffle(__card_deque.begin(), __card_deque.end(), rng);
@@ -49,6 +54,13 @@ class deck {
     inline void clear() { __card_deque.clear(); }
 
     inline card& at(int index) { return __card_deque.at(index); }
+
+    inline void add_cards(int _level, int _type, int _trigger, int _count = 1) {
+        card c(_level, _type, _trigger);
+        for (int i = 0; i < _count; i++) {
+            __card_deque.push_back(c);
+        }
+    }
 
    private:
     // <TOP> [card, card, ..., card] <BOTTOM>

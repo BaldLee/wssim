@@ -29,7 +29,7 @@ class card {
             default:
                 type_str = "NOTYPE";
         }
-        ss << "{lv" << __level << "," << type_str << "," << __trigger << "} ";
+        ss << "{lv" << __level << "," << type_str << "," << __trigger << "}";
         return ss.str();
     }
 
