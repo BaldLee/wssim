@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <sstream>
 
 namespace wssim {
 class card {

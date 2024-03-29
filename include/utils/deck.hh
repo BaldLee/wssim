@@ -3,7 +3,6 @@
 #include <deque>
 #include <iostream>
 #include <random>
-#include <sstream>
 
 #include "utils/card.hh"
 

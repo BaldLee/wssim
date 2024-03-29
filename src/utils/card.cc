@@ -2,7 +2,6 @@
 
 namespace wssim {
 std::string card::to_str() const {
-    std::stringstream ss;
     std::string type_str;
     switch (__type) {
         case CHAR:
@@ -17,7 +16,8 @@ std::string card::to_str() const {
         default:
             type_str = "NOTYPE";
     }
-    ss << "{lv" << __level << "," << type_str << "," << __trigger << "}";
-    return ss.str();
+    // ss << "{lv" << __level << "," << type_str << "," << __trigger << "}";
+    return std::string("{lv" + std::to_string(__level) + "," + type_str + "," +
+                       std::to_string(__trigger) + "}");
 }
 }  // namespace wssim

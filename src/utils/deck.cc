@@ -5,12 +5,11 @@ std::random_device deck::rd;
 std::mt19937 deck::rng(deck::rd());
 
 std::string deck::to_str() const {
-    std::stringstream ss;
-    ss << '[';
+    std::string ret("[");
     std::for_each(__card_deque.begin(), __card_deque.end(),
-                  [&](auto x) { ss << x.to_str() << ','; });
-    ss << ']';
-    return ss.str();
+                  [&](auto x) { ret += x.to_str() + ","; });
+    ret += "]";
+    return ret;
 }
 
 void deck::add_cards(int _level, int _type, int _trigger, int _count) {
