@@ -16,11 +16,33 @@ class player {
           __stage(_statge),
           __hands(_hands) {}
 
-    int hp() const;
-    void clean_all();
-    bool death_check() const;
+    inline int hp() const { return __level.size() * 7 + __clock.size(); }
+
+    inline void clean_all() {
+        __deck.clear();
+        __waiting_room.clear();
+        __level.clear();
+        __clock.clear();
+        __stock.clear();
+        __memory.clear();
+        __stage.clear();
+        __hands.clear();
+    }
+
+    inline bool death_check() const { return __level.size() >= 4; }
+
     bool levelup_check();
-    bool refresh_check();
+
+    inline bool refresh_check() {
+        if (__deck.size() > 0) {
+            return false;
+        }
+        __deck = std::move(__waiting_room);
+        __deck.shuffle();
+        __clock.push_top(__deck.pop_top());
+        levelup_check();
+        return true;
+    }
 
    private:
     deck __deck;

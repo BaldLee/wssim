@@ -1,12 +1,16 @@
 #pragma once
 #include <algorithm>
 #include <deque>
+#include <iostream>
 #include <random>
+#include <sstream>
 
 #include "utils/card.hh"
 
 /* Every list of cards is a deck.
  * Stock, clock, hands , waiting room, level and deck are all deck.
+ * We choose deque to manage deck, because we have to pop and push at the front
+ * and back, and we have to access elements with index while shuffling the deck.
  */
 
 namespace wssim {
@@ -36,14 +40,7 @@ class deck {
         return bottom;
     }
 
-    inline std::string to_str() const {
-        std::stringstream ss;
-        ss << '[';
-        std::for_each(__card_deque.begin(), __card_deque.end(),
-                      [&](auto x) { ss << x.to_str() << ','; });
-        ss << ']';
-        return ss.str();
-    }
+    std::string to_str() const;
 
     inline void print() const { std::cout << to_str() << std::endl; }
 
@@ -55,12 +52,7 @@ class deck {
 
     inline card& at(int index) { return __card_deque.at(index); }
 
-    inline void add_cards(int _level, int _type, int _trigger, int _count = 1) {
-        card c(_level, _type, _trigger);
-        for (int i = 0; i < _count; i++) {
-            __card_deque.push_back(c);
-        }
-    }
+    void add_cards(int _level, int _type, int _trigger, int _count = 1);
 
    private:
     // <TOP> [card, card, ..., card] <BOTTOM>
