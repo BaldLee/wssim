@@ -1,4 +1,3 @@
-#pragma once
 #include "utils/player.hh"
 
 namespace wssim {
