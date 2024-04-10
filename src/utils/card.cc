@@ -1,7 +1,7 @@
 #include "utils/card.hh"
 
 namespace wssim {
-std::string card::to_str() const {
+std::string Card::to_str() const {
     std::string type_str;
     switch (__type) {
         case CHAR:

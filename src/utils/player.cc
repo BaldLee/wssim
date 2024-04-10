@@ -1,13 +1,13 @@
 #include "utils/player.hh"
 
 namespace wssim {
-bool player::levelup_check() {
+bool Player::levelup_check() {
     if (__clock.size() < 7) {
         return false;
     }
     int index_to_level = 0;
     for (int i = 6; i >= 0; i--) {
-        if (__clock.at(i).type() != card::CLIMAX) {
+        if (__clock.at(i).type() != Card::CLIMAX) {
             index_to_level = i;
             break;
         }

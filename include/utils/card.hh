@@ -2,14 +2,14 @@
 #include <iostream>
 
 namespace wssim {
-class card {
+class Card {
    public:
     static constexpr int CHAR = 0;
     static constexpr int CLIMAX = 1;
     static constexpr int EVENT = 2;
     static constexpr int WHATEVER = -1;
 
-    card(int _level, int _type, int _trigger)
+    Card(int _level, int _type, int _trigger)
         : __level(_level), __type(_type), __trigger(_trigger) {}
 
     std::string to_str() const;

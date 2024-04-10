@@ -2,11 +2,11 @@
 #include "utils/deck.hh"
 
 namespace wssim {
-class player {
+class Player {
    public:
-    player(const deck& _deck, const deck& _waiting_room, const deck& _level,
-           const deck& _clock, const deck& _stock, const deck& _memory,
-           const deck& _statge, const deck& _hands)
+    Player(const Deck& _deck, const Deck& _waiting_room, const Deck& _level,
+           const Deck& _clock, const Deck& _stock, const Deck& _memory,
+           const Deck& _statge, const Deck& _hands)
         : __deck(_deck),
           __waiting_room(_waiting_room),
           __level(_level),
@@ -45,13 +45,13 @@ class player {
     }
 
    private:
-    deck __deck;
-    deck __waiting_room;
-    deck __level;
-    deck __clock;
-    deck __stock;
-    deck __memory;
-    deck __stage;
-    deck __hands;
+    Deck __deck;
+    Deck __waiting_room;
+    Deck __level;
+    Deck __clock;
+    Deck __stock;
+    Deck __memory;
+    Deck __stage;
+    Deck __hands;
 };
 }  // namespace wssim
