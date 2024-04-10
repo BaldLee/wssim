@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     ax.grid()
     ax.legend()
-    plt.rcParams["font.sans-serif"] = ["SimHei"]
+    plt.rcParams['font.family'] = "SimHei"
     plt.rcParams["axes.unicode_minus"] = False
     plt.title(title)
     plt.savefig("plot.png", dpi=300)
