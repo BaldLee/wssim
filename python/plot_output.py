@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--title",
-                        "-T",
+                        "-t",
                         required=False,
                         default="",
                         type=str,
