@@ -4,6 +4,8 @@
 namespace wssim {
 class Player {
    public:
+    Player() {}
+
     Player(const Deck& _deck, const Deck& _waiting_room, const Deck& _level,
            const Deck& _clock, const Deck& _stock, const Deck& _memory,
            const Deck& _statge, const Deck& _hands)
@@ -15,6 +17,8 @@ class Player {
           __memory(_memory),
           __stage(_statge),
           __hands(_hands) {}
+
+    Player(const int hp) { set_hp(hp); }
 
     inline int hp() const { return __level.size() * 7 + __clock.size(); }
 
@@ -33,16 +37,28 @@ class Player {
 
     bool levelup_check();
 
-    inline bool refresh_check() {
-        if (__deck.size() > 0) {
-            return false;
-        }
-        __deck = std::move(__waiting_room);
-        __deck.shuffle();
-        __clock.push_top(__deck.pop_top());
-        levelup_check();
-        return true;
-    }
+    bool refresh_check();
+
+    void set_hp(const int hp);
+
+    void shuffle_deck();
+
+    inline Deck& deck() { return __deck; };
+
+    inline Deck& waiting_room() { return __waiting_room; }
+
+    /* If damage is canceled , it will return true, otherwise it will return
+     * false */
+    bool take_damage(const int damage);
+
+    int trigger();
+
+    /* If the damage of attack is canceled , it will return true, otherwise it
+     * will return false */
+    bool attack(Player& def, const int soul);
+
+    /* functions for different effects*/
+    int take_michiru(const int count);
 
    private:
     Deck __deck;

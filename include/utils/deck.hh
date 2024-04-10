@@ -23,35 +23,27 @@ class Deck {
 
     inline Card& peek_bottom() { return __card_deque.back(); }
 
-    inline void push_top(const Card& c) { __card_deque.push_front(c); }
+    void push_top(const Card& c);
 
-    inline void push_bottom(const Card& c) { __card_deque.push_back(c); }
+    void push_bottom(const Card& c);
 
-    inline Card pop_top() {
-        auto top = __card_deque.front();
-        __card_deque.pop_front();
-        return top;
-    }
+    Card pop_top();
 
-    inline Card pop_bottom() {
-        auto bottom = __card_deque.front();
-        __card_deque.pop_front();
-        return bottom;
-    }
+    Card pop_bottom();
 
     std::string to_str() const;
 
     inline void print() const { std::cout << to_str() << std::endl; }
 
-    inline void shuffle() {
-        std::shuffle(__card_deque.begin(), __card_deque.end(), rng);
-    }
+    void shuffle();
 
     inline void clear() { __card_deque.clear(); }
 
     inline Card& at(int index) { return __card_deque.at(index); }
 
     void add_cards(int _level, int _type, int _trigger, int _count = 1);
+
+    void add_cards2top(const std::vector<Card>& cards);
 
    private:
     // <TOP> [card, card, ..., card] <BOTTOM>
