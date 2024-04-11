@@ -87,4 +87,14 @@ int Player::take_michiru(const int count) {
     return res;
 }
 
+void Player::pop_bottom_until_climax(const int count) {
+    for (int i = 0; i < count; i++) {
+        if (__deck.peek_bottom().type() == Card::CLIMAX) {
+            break;
+        }
+        __waiting_room.push_top(__deck.pop_bottom());
+        refresh_check();
+    }
+}
+
 }  // namespace wssim

@@ -32,11 +32,11 @@ void benchmark(const int iterations, Func func) {
     atk.deck().add_cards(0, Card::CHAR, 0, 7);
     atk.deck().add_cards(0, Card::CHAR, 1, 14);
     /* We will go through
-     * 6/20, 6/24, 6/28, 6/32
-     * 7/20, 7/24, 7/28, 7/32
-     * 8/20, 8/24, 8/28, 8/32 */
-    for (int climax = 5; climax <= 8; climax++) {
-        for (int deck = 20; deck <= 32; deck += 4) {
+     *  4/20, 4/25, 4/30
+     *  6/20, 6/25, 6/30
+     *  8/20, 8/25, 8/30 */
+    for (int climax = 4; climax <= 8; climax += 2) {
+        for (int deck = 20; deck <= 30; deck += 5) {
             Player def;
             def.deck().add_cards(0, Card::CLIMAX, 0, climax);
             def.deck().add_cards(0, Card::CHAR, 0, deck - climax);

@@ -60,6 +60,8 @@ class Player {
     /* functions for different effects*/
     int take_michiru(const int count);
 
+    void pop_bottom_until_climax(const int count);
+
    private:
     Deck __deck;
     Deck __waiting_room;

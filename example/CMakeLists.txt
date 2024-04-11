@@ -1,3 +1,3 @@
-add_executable(w114_049 w114_049.cc)
+add_executable(simple_sim simple_sim.cc)
 
-target_link_libraries(w114_049 PRIVATE benchmark player)
+target_link_libraries(simple_sim PRIVATE benchmark player)
