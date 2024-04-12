@@ -58,7 +58,15 @@ void sim_s108_003(wssim::Player& atk, wssim::Player& def) {
     }
 }
 
+// s108_083
+void sim_s108_083(wssim::Player& atk, wssim::Player& def) {
+    for (int i = 0; i < 3; i++) {
+        def.take_damage(2);
+        atk.attack(def, 3);
+    }
+}
+
 int main() {
-    wssim::benchmark(10000, sim_s108_003);
+    wssim::benchmark(10000, sim_s108_083);
     return 0;
 }
