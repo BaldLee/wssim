@@ -97,4 +97,39 @@ void Player::pop_bottom_until_climax(const int count) {
     }
 }
 
+int Player::brainstorm(const int count) {
+    int res = 0;
+    std::vector<Card> tmp;
+    for (int i = 0; i < count; i++) {
+        auto card = __deck.pop_top();
+        tmp.push_back(card);
+        if (card.type() == Card::CLIMAX) {
+            res += 1;
+        }
+        refresh_check();
+    }
+    __waiting_room.add_cards2top(tmp);
+    return res;
+}
+
+int Player::take_moka(const int count) {
+    int res = 0;
+    std::vector<Card> tmp;
+    for (int i = 0; i < count; i++) {
+        auto card = __deck.pop_top();
+        if (card.type() == Card::CLIMAX) {
+            __waiting_room.push_top(card);
+            res += 1;
+        } else {
+            tmp.push_back(card);
+        }
+        if (__deck.is_empty()) {
+            break;
+        }
+        __deck.add_cards2top(tmp);
+        refresh_check();
+    }
+    return res;
+}
+
 }  // namespace wssim

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "benchmark/benchmark.hh"
 #include "utils/player.hh"
 
@@ -67,7 +69,54 @@ void sim_s108_083(wssim::Player& atk, wssim::Player& def) {
     }
 }
 
+// brainstorm test
+void sim_brain_storm() {
+    // Brainstorm 4 test
+    std::cout << "Brainstorm 4 test" << std::endl;
+    for (int deck = 20; deck < 34; deck += 2) {
+        for (int climax = 4; climax < 9; climax++) {
+            wssim::Player player;
+            player.deck().add_cards(0, wssim::Card::CHAR, 0, deck - climax);
+            player.deck().add_cards(0, wssim::Card::CLIMAX, 0, climax);
+            int count = 0;
+            for (int i = 0; i < 10000; i++) {
+                auto p = player;
+                p.deck().shuffle();
+                count += p.brainstorm(4);
+            }
+            std::cout << climax << "/" << deck << ": "
+                      << static_cast<double>(count) / 10000 << std::endl;
+        }
+    }
+
+    // Brainstorm 5 test
+    std::cout << "Brainstorm 5 test" << std::endl;
+    for (int deck = 20; deck < 34; deck += 2) {
+        for (int climax = 4; climax < 9; climax++) {
+            wssim::Player player;
+            player.deck().add_cards(0, wssim::Card::CHAR, 0, deck - climax);
+            player.deck().add_cards(0, wssim::Card::CLIMAX, 0, climax);
+            int count = 0;
+            for (int i = 0; i < 10000; i++) {
+                auto p = player;
+                p.deck().shuffle();
+                count += p.brainstorm(5);
+            }
+            std::cout << climax << "/" << deck << ": "
+                      << static_cast<double>(count) / 10000 << std::endl;
+        }
+    }
+}
+
+// Whatif direct attak after 3 cards "mokaed"
+void sim_moka3_direct(wssim::Player& atk, wssim::Player& def) {
+    for (int i = 0; i < 3; i++) {
+        def.take_moka(3);
+        atk.attack(def, 4);
+    }
+}
+
 int main() {
-    wssim::benchmark(10000, sim_w112_003);
+    wssim::benchmark(20000, sim_moka3_direct);
     return 0;
 }

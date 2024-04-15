@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include "utils/deck.hh"
 
 namespace wssim {
@@ -61,6 +63,10 @@ class Player {
     int take_michiru(const int count);
 
     void pop_bottom_until_climax(const int count);
+
+    int brainstorm(const int count);
+
+    int take_moka(const int count);
 
    private:
     Deck __deck;
