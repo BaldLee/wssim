@@ -41,12 +41,15 @@ void benchmark(const int iterations, Func func) {
             def.deck().add_cards(0, Card::CLIMAX, 0, climax);
             def.deck().add_cards(0, Card::CHAR, 0, deck - climax);
             def.waiting_room().add_cards(0, Card::CLIMAX, 0, 8 - climax);
-            /* We assume number of non-climax in waiting is:
+            /* We assume number of non-climax in waiting room is:
              *       climax / deck * (8 - climax)           */
             def.waiting_room().add_cards(
                 0, Card::CHAR, 0,
                 static_cast<int>(static_cast<double>(climax) / deck *
                                  (8 - climax)));
+            /* We assume number of cards in stock is 6. It is not accurate.
+             * Assume the defender is very careful about koukei */
+            def.stock().add_cards(0, Card::CHAR, 0, 6);
             std::string json_index =
                 std::to_string(climax) + "/" + std::to_string(deck);
             for (int hp = 14; hp < 28; hp++) {

@@ -49,6 +49,8 @@ class Player {
 
     inline Deck& waiting_room() { return __waiting_room; }
 
+    inline Deck& stock() { return __stock; }
+
     /* If damage is canceled , it will return true, otherwise it will return
      * false */
     bool take_damage(const int damage);
@@ -67,6 +69,8 @@ class Player {
     int brainstorm(const int count);
 
     int take_moka(const int count);
+
+    int take_maseki();
 
    private:
     Deck __deck;

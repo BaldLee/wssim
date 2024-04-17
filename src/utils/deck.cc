@@ -39,6 +39,13 @@ void Deck::add_cards2top(const std::vector<Card>& cards) {
     __card_deque.insert(__card_deque.end(), cards.begin(), cards.end());
 }
 
+/* TODO: This function is used for maseki and koukei.
+ * It should be a movement other than assignment. */
+void Deck::add_deck2top(const Deck deck) {
+    __card_deque.insert(__card_deque.end(), deck.__card_deque.begin(),
+                        deck.__card_deque.end());
+}
+
 void Deck::shuffle() {
     std::shuffle(__card_deque.begin(), __card_deque.end(), rng);
 }

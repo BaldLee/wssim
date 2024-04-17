@@ -132,4 +132,15 @@ int Player::take_moka(const int count) {
     return res;
 }
 
+int Player::take_maseki() {
+    auto res = stock().size();
+    __deck.add_deck2top(__stock);
+    __stock.clear();
+    __deck.shuffle();
+    for (int i = 0; i < res; i++) {
+        __stock.push_top(__deck.pop_top());
+    }
+    return res;
+}
+
 }  // namespace wssim

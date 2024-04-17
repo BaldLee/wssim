@@ -116,7 +116,16 @@ void sim_moka3_direct(wssim::Player& atk, wssim::Player& def) {
     }
 }
 
+// Whatif 4 3 4 3 4 3 after maseki
+void sim_s108_t17(wssim::Player& atk, wssim::Player& def) {
+    def.take_maseki();
+    for (int i = 0; i < 3; i++) {
+        def.take_damage(4);
+        atk.attack(def, 3);
+    }
+}
+
 int main() {
-    wssim::benchmark(20000, sim_moka3_direct);
+    wssim::benchmark(20000, sim_s108_t17);
     return 0;
 }

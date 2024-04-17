@@ -45,6 +45,8 @@ class Deck {
 
     void add_cards2top(const std::vector<Card>& cards);
 
+    void add_deck2top(const Deck deck);
+
     inline bool is_empty() const { return __card_deque.empty(); }
 
    private:
