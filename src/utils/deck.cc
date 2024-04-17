@@ -35,12 +35,7 @@ void Deck::add_cards(int _level, int _type, int _trigger, int _count) {
     }
 }
 
-/* TODO: This function is used for maseki and koukei.
- * It should be a movement other than assignment. */
-void Deck::add_deck2top(const Deck deck) {
-    __card_deque.insert(__card_deque.end(), deck.__card_deque.begin(),
-                        deck.__card_deque.end());
-}
+void Deck::add_deck2top(const Deck deck) { add_cards2top(deck.__card_deque); }
 
 void Deck::shuffle() {
     std::shuffle(__card_deque.begin(), __card_deque.end(), rng);
