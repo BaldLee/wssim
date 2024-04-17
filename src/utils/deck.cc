@@ -35,10 +35,6 @@ void Deck::add_cards(int _level, int _type, int _trigger, int _count) {
     }
 }
 
-void Deck::add_cards2top(const std::vector<Card>& cards) {
-    __card_deque.insert(__card_deque.end(), cards.begin(), cards.end());
-}
-
 /* TODO: This function is used for maseki and koukei.
  * It should be a movement other than assignment. */
 void Deck::add_deck2top(const Deck deck) {

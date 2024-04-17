@@ -3,6 +3,7 @@
 #include <deque>
 #include <iostream>
 #include <random>
+#include <type_traits>
 
 #include "utils/card.hh"
 
@@ -43,9 +44,17 @@ class Deck {
 
     void add_cards(int _level, int _type, int _trigger, int _count = 1);
 
-    void add_cards2top(const std::vector<Card>& cards);
+    // void add_cards2top(const std::vector<Card>& cards);
 
     void add_deck2top(const Deck deck);
+
+    template <typename Container>
+    void add_cards2top(const Container& container) {
+        static_assert(std::is_same_v<typename Container::value_type,
+                                     typename std::deque<Card>::value_type>);
+        __card_deque.insert(__card_deque.end(), container.begin(),
+                            container.end());
+    }
 
     inline bool is_empty() const { return __card_deque.empty(); }
 
