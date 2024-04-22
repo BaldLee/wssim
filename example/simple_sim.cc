@@ -134,7 +134,19 @@ void sim_moseki_s108_083(wssim::Player& atk, wssim::Player& def) {
     }
 }
 
+// W102_077
+void sim_w102_077(wssim::Player& atk, wssim::Player& def) {
+	atk.attack(def,2);
+	def.take_damage(1);
+	def.take_damage(2);
+	def.take_damage(3);
+	def.take_damage(4);
+	def.take_damage(5);
+	def.take_damage(6);
+	def.take_damage(7);
+}
+
 int main() {
-    wssim::benchmark(20000, sim_moseki_s108_t17);
+    wssim::benchmark(20000, sim_w102_077);
     return 0;
 }
