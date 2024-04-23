@@ -143,4 +143,24 @@ int Player::take_maseki() {
     return res;
 }
 
+std::vector<Card> Player::get_nonCX_fromWR(const int count) {
+    std::vector<Card> res;
+    for (int i = 0; i < count; i++) {
+        bool found = false;
+        for (int k = 0; k < __waiting_room.size(); k++) {
+            auto card = __waiting_room.pop_top();
+            if (card.type() != Card::CLIMAX) {
+                found = true;
+                res.push_back(card);
+                break;
+            }
+            __waiting_room.push_bottom(card);
+        }
+        if (!found) {
+            break;
+        }
+    }
+    return res;
+}
+
 }  // namespace wssim

@@ -48,6 +48,8 @@ class Deck {
 
     void add_deck2top(const Deck deck);
 
+    double get_compression_rate() const;
+
     template <typename Container>
     void add_cards2top(const Container& container) {
         static_assert(std::is_same_v<typename Container::value_type,

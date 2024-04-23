@@ -136,17 +136,83 @@ void sim_moseki_s108_083(wssim::Player& atk, wssim::Player& def) {
 
 // W102_077
 void sim_w102_077(wssim::Player& atk, wssim::Player& def) {
-	atk.attack(def,2);
-	def.take_damage(1);
-	def.take_damage(2);
-	def.take_damage(3);
-	def.take_damage(4);
-	def.take_damage(5);
-	def.take_damage(6);
-	def.take_damage(7);
+    atk.attack(def, 2);
+    def.take_damage(1);
+    def.take_damage(2);
+    def.take_damage(3);
+    def.take_damage(4);
+    def.take_damage(5);
+    def.take_damage(6);
+    def.take_damage(7);
+}
+
+void se46_56(wssim::Player& atk, wssim::Player& def, const int damage) {
+    def.take_damage(damage);
+    auto cards = def.get_nonCX_fromWR(1);
+    for (auto& card : cards) {
+        def.deck().push_top(card);
+    }
+    atk.attack(def, 3);
+}
+
+// All 2
+void sim_se46_56_test1(wssim::Player& atk, wssim::Player& def) {
+    for (int i = 0; i < 3; i++) {
+        se46_56(atk, def, 2);
+    }
+}
+
+// All 4
+void sim_se46_56_test2(wssim::Player& atk, wssim::Player& def) {
+    for (int i = 0; i < 3; i++) {
+        se46_56(atk, def, 4);
+    }
+}
+
+// 4 only if neccessary
+void sim_se46_56_test3(wssim::Player& atk, wssim::Player& def) {
+    int damage = 0;
+    damage = (28 - def.hp() - 9 - 8) > 2 ? 4 : 2;
+    se46_56(atk, def, damage);
+
+    damage = (28 - def.hp() - 6 - 4) > 2 ? 4 : 2;
+    se46_56(atk, def, damage);
+
+    damage = (28 - def.hp() - 3) > 2 ? 4 : 2;
+    se46_56(atk, def, damage);
+}
+
+// 4 only compressoin rate is lower than 0.25
+void sim_se46_56_test4(wssim::Player& atk, wssim::Player& def) {
+    for (int i = 0; i < 3; i++) {
+        int damage = def.deck().get_compression_rate() < 0.25 ? 4 : 2;
+        se46_56(atk, def, damage);
+    }
+}
+
+// merge test3 and test4 above
+void sim_se46_56_test5(wssim::Player& atk, wssim::Player& def) {
+    int damage = 0;
+    damage = def.deck().get_compression_rate() < 0.25 ? 4 : 2;
+    if ((28 - def.hp() - 9 - 8) > 2) {
+        damage = 4;
+    }
+    se46_56(atk, def, damage);
+
+    damage = def.deck().get_compression_rate() < 0.25 ? 4 : 2;
+    if ((28 - def.hp() - 6 - 4) > 2) {
+        damage = 4;
+    }
+    se46_56(atk, def, damage);
+
+    damage = def.deck().get_compression_rate() < 0.25 ? 4 : 2;
+    if ((28 - def.hp() - 3) > 2) {
+        damage = 4;
+    }
+    se46_56(atk, def, damage);
 }
 
 int main() {
-    wssim::benchmark(20000, sim_w102_077);
+    wssim::benchmark(20000, sim_se46_56_test5);
     return 0;
 }

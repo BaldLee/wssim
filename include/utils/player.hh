@@ -72,6 +72,8 @@ class Player {
 
     int take_maseki();
 
+    std::vector<Card> get_nonCX_fromWR(const int count);
+
    private:
     Deck __deck;
     Deck __waiting_room;

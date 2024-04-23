@@ -41,4 +41,14 @@ void Deck::shuffle() {
     std::shuffle(__card_deque.begin(), __card_deque.end(), rng);
 }
 
+double Deck::get_compression_rate() const {
+    int cx_num = 0;
+    for (auto& card : __card_deque) {
+        if (card.type() == Card::CLIMAX) {
+            cx_num += 1;
+        }
+    }
+    return static_cast<double>(cx_num) / __card_deque.size();
+}
+
 }  // namespace wssim
