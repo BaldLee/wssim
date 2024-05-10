@@ -52,4 +52,3 @@ if __name__ == "__main__":
     plt.rcParams["font.sans-serif"] = "WenQuanYi Zen Hei"
     plt.title(title)
     plt.savefig("plot.png", dpi=300)
-
