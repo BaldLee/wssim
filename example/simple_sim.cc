@@ -212,7 +212,19 @@ void sim_se46_56_test5(wssim::Player& atk, wssim::Player& def) {
     se46_56(atk, def, damage);
 }
 
+void sim_s124_026_test0(wssim::Player& atk, wssim::Player& def) {
+    def.take_max_damage(4);
+    def.take_max_damage(4);
+    def.take_max_damage(4);
+}
+
+void sim_s124_026_test1(wssim::Player& atk, wssim::Player& def) {
+    atk.attack(def, 3);
+    atk.attack(def, 3);
+    atk.attack(def, 3);
+}
+
 int main() {
-    wssim::benchmark(20000, sim_se46_56_test5);
+    wssim::benchmark(20000, sim_s124_026_test1);
     return 0;
 }

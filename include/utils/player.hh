@@ -55,6 +55,8 @@ class Player {
      * false */
     bool take_damage(const int damage);
 
+    bool take_max_damage(const int damage);
+
     int trigger();
 
     /* If the damage of attack is canceled , it will return true, otherwise it

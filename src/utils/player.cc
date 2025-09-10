@@ -63,6 +63,28 @@ bool Player::take_damage(const int damage) {
     return canceled;
 }
 
+// s124-026
+bool Player::take_max_damage(const int damage) {
+    bool canceled = false;
+    std::vector<Card> tmp;
+    for (int i = 0; i < damage; i++) {
+        auto card = __deck.pop_top();
+        tmp.push_back(card);
+        refresh_check();
+        if (card.type() == Card::CLIMAX) {
+            canceled = true;
+            break;
+        }
+    }
+    if (!canceled) {
+        __waiting_room.add_cards2top(tmp);
+    } else {
+        __clock.add_cards2top(tmp);
+        levelup_check();
+    }
+    return canceled;
+}
+
 int Player::trigger() {
     auto card = __deck.pop_top();
     __stock.push_top(card);
